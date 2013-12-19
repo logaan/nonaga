@@ -10,3 +10,7 @@ Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
 [bgg]: http://boardgamegeek.com/boardgame/46614/nonaga
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/logaan/nonaga/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
