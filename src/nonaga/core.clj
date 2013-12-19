@@ -22,12 +22,15 @@
        
                      [3 0]}})
 
-(defn nw [[x y]] (if (odd?  y) [x (+ y 1)] [(- x 1) (+ y 1)]))
-(defn ne [[x y]] (if (even? y) [x (+ y 1)] [(+ x 1) (+ y 1)]))
-(defn e  [[x y]]                           [(+ x 1) y      ])
-(defn se [[x y]] (if (even? y) [x (- y 1)] [(+ x 1) (- y 1)]))
-(defn sw [[x y]] (if (odd?  y) [x (- y 1)] [(- x 1) (- y 1)]))
-(defn w  [[x y]]                           [(- x 1) y      ])
+(defn nw [[x y]] [(if (odd?  y) x (- x 1)) (+ y 1)])
+(defn ne [[x y]] [(if (even? y) x (+ x 1)) (+ y 1)])
+(defn e  [[x y]] [(+ x 1) y])
+(defn se [[x y]] [(if (even? y) x (+ x 1)) (- y 1)])
+(defn sw [[x y]] [(if (odd?  y) x (- x 1)) (- y 1)])
+(defn w  [[x y]] [(- x 1) y])
+
+(defn neighbours [cell]
+  (into #{} ((juxt nw ne e se sw w) cell)))
 
 (defn invalid-space? [{:keys [rings whites blacks]} coord]
   (not (and (rings coord)

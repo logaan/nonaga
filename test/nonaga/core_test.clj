@@ -13,6 +13,9 @@
        sw [3 4] [[3 4] [2 3] [2 2] [1 1] [1 0]]
        w  [4 2] [[4 2] [3 2] [2 2] [1 2] [0 2]]))
 
+(deftest neighbouring-cells
+  (is (= #{[1 3] [2 3] [1 2] [3 2] [1 1] [2 1]} (neighbours [2 2]))))
+
 (deftest invalid-space
   (are [coord expected]
        (= expected (invalid-space? initial-game coord))
