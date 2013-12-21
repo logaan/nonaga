@@ -32,4 +32,13 @@
        [0 3] e  [3 3]
        [0 1] e  [3 1]))
 
+(deftest valid-slides
+  (are [coord direction valid?]
+       (= valid? (valid-slide? initial-game coord direction))
+       [3 0] ne false
+       [3 0] se true)
+  (let [board-with-gap {:rings #{[1 1] [3 0] [2 0]}}]
+    (is (not (valid-slide? board-with-gap [2 0] ne)))
+    (is (valid-slide? board-with-gap [3 0] ne))))
+
 (run-tests)
