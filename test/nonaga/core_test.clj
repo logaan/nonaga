@@ -41,4 +41,16 @@
     (is (not (valid-slide? board-with-gap [2 0] ne)))
     (is (valid-slide? board-with-gap [3 0] ne))))
 
+(deftest distances
+  (are [endpoint dist]
+       (= dist (distance [0 0] endpoint))
+       [12 0]  12 
+       [14 7]  17 
+       [12 11] 17 
+       [0 5]   5  
+       [3 10]  10
+       [4 8]   8
+       [5 8]   9))
+
 (run-tests)
+
