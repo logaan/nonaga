@@ -64,6 +64,10 @@
                                         (neighbouring-directions direction))))]
     (not (or sliding-into-ring? gap-too-small?))))
 
+(defn valid-slides [board coord]
+  (filter (partial valid-slide? board coord)
+          (keys neighbouring-directions)))
+
 (defn distance [[x1 y1] [x2 y2]]
   (let [xdiff (Math/abs (- x1 x2))
         ydiff (Math/abs (- y1 y2))
