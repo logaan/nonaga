@@ -46,12 +46,9 @@
       step)))
 
 (def neighbouring-directions
-  {nw [ne w]
-   ne [nw e]
-   w  [nw sw]
-   e  [ne se]
-   sw [se w]
-   se [sw e]})
+  {nw [ne w]  ne [nw e]
+   w  [nw sw] e  [ne se]
+   sw [se w]  se [sw e]})
 
 ; Ring
 ; Should not be sliding into another ring.
