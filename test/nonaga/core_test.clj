@@ -1,6 +1,7 @@
 (ns nonaga.core-test
   (:require [clojure.test :refer :all]
-            [nonaga.core :refer :all]))
+            [nonaga.core :refer :all]
+            [clojure.pprint :refer [pprint]]))
 
 (deftest directional-functions
   (are [function start expected]
@@ -19,7 +20,7 @@
 (deftest invalid-space
   (are [coord expected]
        (= expected (invalid-space? initial-game coord))
-       
+
        [0 4] true
        [1 4] true
        [2 4] false))
@@ -46,10 +47,10 @@
 (deftest distances
   (are [endpoint dist]
        (= dist (distance [0 0] endpoint))
-       [12 0]   12 
-       [14 7]   17 
-       [12 11]  17 
-       [0 5]    5  
+       [12 0]   12
+       [14 7]   17
+       [12 11]  17
+       [0 5]    5
        [3 10]   10
        [4 8]    8
        [5 8]    9
@@ -57,6 +58,60 @@
 
 (deftest enumerate-valid-directions-to-slide
   (is (= 3 (count (valid-slides board-with-gap [2 1])))) )
+
+(deftest path-finding
+  (are [valid? board] (= valid? (move-towards {:rings board} [0 2] [4 2]))
+
+       ; No obstructions
+       true
+       #{[0 2]}
+
+       ; Distination obstructed
+       false
+       #{[0 2]                   [4 2]}
+
+       ; Non blocking obsticle
+       true
+       #{[0 2]      [2 2]}
+
+       ; Backtracking obsticle
+       true
+       #{ [0 3] [1 3] [2 3] [3 3]
+        [0 2]             [3 2]
+          [0 1] [1 1] [2 1] [3 1]}
+
+       ; Source surrounded
+       false
+       #{   [-1 4] [0 4] [1 4]
+          [-2 3]             [1 3]
+        [-2 2]       [0 2]       [2 2]
+          [-2 1]             [1 1]
+            [-1 0] [0 0] [1 0]}
+
+       ; Source surrounded with gap
+       false
+       #{   [-1 4] [0 4]
+          [-2 3]             [1 3]
+        [-2 2]       [0 2]       [2 2]
+          [-2 1]             [1 1]
+            [-1 0] [0 0] [1 0]}
+
+
+       ;Destination surrounded
+       false
+       #{   [3 4] [4 4] [5 4]  
+          [2 3]             [5 3]
+        [2 2]                   [6 2] 
+          [2 1]             [5 1] 
+            [3 0] [4 0] [5 0]}
+
+       ;Destination surrounded with gap
+       false
+       #{   [3 4] [4 4]        
+          [2 3]             [5 3]
+        [2 2]                   [6 2] 
+          [2 1]             [5 1] 
+            [3 0] [4 0] [5 0]}))
 
 (run-tests)
 

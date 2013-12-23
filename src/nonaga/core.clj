@@ -1,4 +1,5 @@
-(ns nonaga.core)
+(ns nonaga.core
+  (:require [clojure.set :refer [difference]]))
 
 (def initial-game
   {:rings
@@ -29,6 +30,7 @@
 (defn sw [[x y]] [(if (odd?  y) x (- x 1)) (- y 1)])
 (defn se [[x y]] [(if (even? y) x (+ x 1)) (- y 1)])
 
+; Coord
 (defn neighbours [cell]
   (into #{} ((juxt nw ne e se sw w) cell)))
 
@@ -61,10 +63,12 @@
                                         (neighbouring-directions direction))))]
     (not (or sliding-into-ring? gap-too-small?))))
 
+; Ring
 (defn valid-slides [board coord]
   (filter (partial valid-slide? board coord)
           (keys neighbouring-directions)))
 
+; Coord
 (defn distance [[x1 y1] [x2 y2]]
   (let [xdiff (Math/abs (- x1 x2))
         ydiff (Math/abs (- y1 y2))
@@ -72,4 +76,32 @@
     (if (> xdiff halfy)
       (+ xdiff halfy)
       ydiff)))
+
+(defn tag-with-distance [destination source]
+  [(distance source destination) source])
+
+(defn neighbour-distances [grid source destination]
+  (->> (valid-slides grid source)
+       (map #(% source))
+       (map (partial tag-with-distance destination))))
+
+(defn move-towards
+  ([board source destination]
+   (if ((:rings board) destination)
+     false
+     (move-towards board
+                   (sorted-set (tag-with-distance destination source))
+                   (sorted-set)
+                   destination
+                   0)))
+  ([board unexploded exploded destination count]
+   (let [next-choice    (first unexploded)
+         [_ source]     next-choice
+         explosion      (neighbour-distances board source destination)
+         new-exploded   (conj exploded next-choice) 
+         new-unexploded (difference (into unexploded explosion) new-exploded)]
+     (if (new-unexploded [0 destination]) true
+       (if (empty? new-unexploded) false
+         (if (> count 500) false
+           (recur board new-unexploded new-exploded destination (inc count))))))))
 
