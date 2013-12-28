@@ -46,12 +46,29 @@
 (def svg-node
   (sel1 :svg))
 
-(doall
-  (for [[ix iy] rings]
-    (let [x (+ 20 (* 40 ix) (if (odd? iy) 20 0))
-          y (+ 20 (* 40 iy))]
-      (dommy/append! svg-node (ring x y))
-      (dommy/append! svg-node (make-text (- x 10) (+ y 5) (str ix "," iy))))))
+(defn hex-coord->svg-coord [[hex-x hex-y]]
+  (let [x (+ 20 (* 40 hex-x) (if (odd? hex-y) 20 0))
+        y (+ 20 (* 40 hex-y))]
+    [x y]))
 
+(defn coord->str [[x y]]
+  (str x "," y))
 
+; Could make these functional by removing svg-node and append!
+(defn draw-rings [svg-node coords]
+  (->> coords
+       (map hex-coord->svg-coord)
+       (mapv (fn [[x y]] (dommy/append! svg-node (ring x y))))))
+
+(defn draw-coords [svg-node coords]
+  (letfn [(draw [coord [x y]]
+            (let [text (make-text (- x 10) (+ y 5) (coord->str coord))]
+              (dommy/append! svg-node text)))]
+    (->> coords
+         (map hex-coord->svg-coord)
+         (mapv draw coords))))
+
+(draw-rings svg-node rings)
+
+; (draw-coords svg-node rings)
 
