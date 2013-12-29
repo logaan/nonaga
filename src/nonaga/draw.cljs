@@ -1,7 +1,8 @@
 (ns nonaga.draw
   (:require
     [dommy.utils :as utils]
-    [dommy.core :as dommy])
+    [dommy.core :as dommy]
+    [nonaga.core :as n])
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
 
@@ -88,12 +89,20 @@
        (map hex-coord->svg-coord)
        (mapv (fn [[x y]] (dommy/append! svg-node (ring x y))))))
 
+(defn draw-possible-moves [svg-node coord]
+  (->> (n/valid-destinations n/initial-game [1 4])
+       (map hex-coord->svg-coord)
+       (mapv (fn [[x y]]
+               (let [marble (marble x y "yellow")]
+                 (dommy/append! svg-node marble))))))
+
 (defn draw-marbles [svg-node coords color]
   (->> coords
        (map hex-coord->svg-coord)
-       (mapv (fn [[x y]]
+       (mapv (fn [[x y :as coord]]
                (let [marble (marble x y color)]
-                 (aset marble "onclick" (fn [e] (log color)))
+                 (aset marble "onclick"
+                       (fn [e] (draw-possible-moves svg-node coord)))
                  (dommy/append! svg-node marble))))))
 
 (defn draw-coords [svg-node coords]

@@ -31,7 +31,9 @@
 
        [3 0] nw [1 3]
        [0 3] e  [3 3]
-       [0 1] e  [3 1]))
+       [0 1] e  [3 1])
+
+  (is (= #{[2 1] [2 4] [0 3]} (valid-destinations initial-game [1 4]))))
 
 (def board-with-gap
   {:rings #{[1 1] [3 0] [2 0]}})

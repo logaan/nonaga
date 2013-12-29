@@ -31,21 +31,25 @@
 (defn se [[x y]] [(if (even? y) x (+ x 1)) (- y 1)])
 
 ; Coord
-(defn neighbours [cell]
-  (into #{} ((juxt nw ne e se sw w) cell)))
+(def directions
+  [nw ne e se sw w])
 
-; Ball
+(defn neighbours [cell]
+  (into #{} ((apply juxt directions) cell)))
+
 (defn invalid-space? [{:keys [rings whites blacks]} coord]
   (not (and (rings coord)
             (not (or (whites coord)
                      (blacks coord))))))
 
-; Ball
 (defn move [board coord direction]
   (first
     (for [step (iterate direction coord)
           :when (invalid-space? board (direction step))]
       step)))
+
+(defn valid-destinations [board coord]
+  (disj (into #{} (map (partial move board coord) directions)) coord))
 
 (def neighbouring-directions
   {nw [ne w]  ne [nw e]
