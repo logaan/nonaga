@@ -91,7 +91,10 @@
 (defn draw-marbles [svg-node coords color]
   (->> coords
        (map hex-coord->svg-coord)
-       (mapv (fn [[x y]] (dommy/append! svg-node (marble x y color))))))
+       (mapv (fn [[x y]]
+               (let [marble (marble x y color)]
+                 (aset marble "onclick" (fn [e] (log color)))
+                 (dommy/append! svg-node marble))))))
 
 (defn draw-coords [svg-node coords]
   (letfn [(draw [coord [x y]]
@@ -101,9 +104,9 @@
          (map hex-coord->svg-coord)
          (mapv draw coords))))
 
+(draw-rings svg rings)
 (draw-marbles svg reds "red")
 (draw-marbles svg blues "blue")
-(draw-rings svg rings)
 
 ; (draw-coords svg rings)
 
