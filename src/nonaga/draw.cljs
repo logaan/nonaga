@@ -89,21 +89,26 @@
        (map hex-coord->svg-coord)
        (mapv (fn [[x y]] (dommy/append! svg-node (ring x y))))))
 
-(defn draw-possible-moves [svg-node coord]
-  (->> (n/valid-destinations n/initial-game [1 4])
+(defn draw-possible-moves [svg-node coord color]
+  ; This shouldn't be using initial game
+  (->> (n/valid-destinations n/initial-game coord)
        (map hex-coord->svg-coord)
        (mapv (fn [[x y]]
-               (let [marble (marble x y "yellow")]
+               (let [marble (marble x y color)]
                  (dommy/append! svg-node marble))))))
+
+(def light-colors
+  {"red" "pink"
+   "blue" "aqua"})
 
 (defn draw-marbles [svg-node coords color]
   (->> coords
        (map hex-coord->svg-coord)
-       (mapv (fn [[x y :as coord]]
+       (mapv (fn [coord [x y]]
                (let [marble (marble x y color)]
                  (aset marble "onclick"
-                       (fn [e] (draw-possible-moves svg-node coord)))
-                 (dommy/append! svg-node marble))))))
+                       (fn [e] (draw-possible-moves svg-node coord (light-colors color))))
+                 (dommy/append! svg-node marble))) coords)))
 
 (defn draw-coords [svg-node coords]
   (letfn [(draw [coord [x y]]
