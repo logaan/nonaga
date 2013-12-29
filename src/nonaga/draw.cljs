@@ -99,7 +99,7 @@
 
 (def light-colors
   {"red" "pink"
-   "blue" "aqua"})
+   "blue" "lightblue"})
 
 (defn draw-marbles [svg-node coords color]
   (->> coords
