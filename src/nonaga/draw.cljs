@@ -6,6 +6,8 @@
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
 
+(comment
+
 (extend-type object
    dommy.template/PElement
    (-elem [this] this))
@@ -124,3 +126,4 @@
 
 ; (draw-coords svg rings)
 
+)

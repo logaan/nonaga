@@ -1,7 +1,10 @@
 (ns nonaga.core-test
-  (:require [clojure.test :refer :all]
-            [nonaga.core :refer :all]
-            [clojure.pprint :refer [pprint]]))
+  (:require-macros [cemerick.cljs.test
+                    :refer (deftest is are)])
+  (:use [nonaga.core :only [nw ne e se sw w neighbours invalid-space? move
+                            initial-game valid-slide? valid-slides
+                            move-towards distance valid-destinations]])
+  (:require [cemerick.cljs.test :as t]))
 
 (deftest directional-functions
   (are [function start expected]
@@ -114,6 +117,4 @@
         [2 2]                   [6 2] 
           [2 1]             [5 1] 
             [3 0] [4 0] [5 0]}))
-
-(run-tests)
 
