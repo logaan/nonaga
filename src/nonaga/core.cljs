@@ -1,5 +1,6 @@
 (ns nonaga.core
-  (:require [clojure.set :refer [difference]]))
+  (:require [clojure.set :refer [difference]])
+  (:use [nonaga.rules.coord :only [nw ne e se sw w directions neighbours]]))
 
 (def initial-game
   {:rings
@@ -22,20 +23,6 @@
      [0 2]
        
                      [3 0]}})
-
-(defn nw [[x y]] [(if (odd?  y) x (- x 1)) (+ y 1)])
-(defn ne [[x y]] [(if (even? y) x (+ x 1)) (+ y 1)])
-(defn w  [[x y]] [(- x 1) y])
-(defn e  [[x y]] [(+ x 1) y])
-(defn sw [[x y]] [(if (odd?  y) x (- x 1)) (- y 1)])
-(defn se [[x y]] [(if (even? y) x (+ x 1)) (- y 1)])
-
-; Coord
-(def directions
-  [nw ne e se sw w])
-
-(defn neighbours [cell]
-  (into #{} ((apply juxt directions) cell)))
 
 (defn invalid-space? [{:keys [rings whites blacks]} coord]
   (not (and (rings coord)
