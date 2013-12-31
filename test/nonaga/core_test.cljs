@@ -2,8 +2,7 @@
   (:require-macros [cemerick.cljs.test
                     :refer (deftest is are)])
   (:use [nonaga.core :only [invalid-space? move initial-game valid-slide?
-                            valid-slides move-towards distance
-                            valid-destinations]]
+                            valid-slides move-towards valid-destinations]]
        [nonaga.rules.coord :only [nw ne e se sw w]] )
   (:require [cemerick.cljs.test :as t]))
 
@@ -35,18 +34,6 @@
        [3 0] se true)
   (is (not (valid-slide? board-with-gap [2 0] ne)))
   (is (valid-slide? board-with-gap [3 0] ne)))
-
-(deftest distances
-  (are [endpoint dist]
-       (= dist (distance [0 0] endpoint))
-       [12 0]   12
-       [14 7]   17
-       [12 11]  17
-       [0 5]    5
-       [3 10]   10
-       [4 8]    8
-       [5 8]    9
-       [-16 -9] 20))
 
 (deftest enumerate-valid-directions-to-slide
   (is (= 3 (count (valid-slides board-with-gap [2 1])))) )

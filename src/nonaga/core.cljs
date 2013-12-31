@@ -1,6 +1,9 @@
+; This should be becoming the game ns. It'll contain functions that make use of
+; game/board objects.
 (ns nonaga.core
   (:require [clojure.set :refer [difference]])
-  (:use [nonaga.rules.coord :only [nw ne e se sw w directions neighbours]]))
+  (:use [nonaga.rules.coord :only [directions neighbouring-directions
+                                   tag-with-distance]]))
 
 (def initial-game
   {:rings
@@ -38,11 +41,6 @@
 (defn valid-destinations [board coord]
   (disj (into #{} (map (partial move board coord) directions)) coord))
 
-(def neighbouring-directions
-  {nw [ne w]  ne [nw e]
-   w  [nw sw] e  [ne se]
-   sw [se w]  se [sw e]})
-
 ; Ring
 ; Should not be sliding into another ring.
 ; Should not be sliding between two rings.
@@ -58,18 +56,6 @@
 (defn valid-slides [board coord]
   (filter (partial valid-slide? board coord)
           (keys neighbouring-directions)))
-
-; Coord
-(defn distance [[x1 y1] [x2 y2]]
-  (let [xdiff (Math/abs (- x1 x2))
-        ydiff (Math/abs (- y1 y2))
-        halfy (int (/ ydiff 2))]
-    (if (> xdiff halfy)
-      (+ xdiff halfy)
-      ydiff)))
-
-(defn tag-with-distance [destination source]
-  [(distance source destination) source])
 
 (defn neighbour-distances [grid source destination]
   (->> (valid-slides grid source)
