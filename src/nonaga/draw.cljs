@@ -6,9 +6,8 @@
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
 
-(comment
-
-(extend-type object
+ 
+  (extend-type object
    dommy.template/PElement
    (-elem [this] this))
 
@@ -49,16 +48,13 @@
             :r 8
             :fill color))
 
-(dommy/append! (sel1 :body) svg)
-
+; Seriously. wtf. why does this crash phantom?
 (def rings
-  (list
-       [1 4] [2 4] [3 4]
+  #{   [1 4] [2 4] [3 4]
      [0 3] [1 3] [2 3] [3 3]
    [0 2] [1 2] [2 2] [3 2] [4 2]
      [0 1] [1 1] [2 1] [3 1]
-       [1 0] [2 0] [3 0]))
-
+       [1 0] [2 0] [3 0]})
 
 (def reds
   (list
@@ -68,6 +64,7 @@
 
        [1 0]))
 
+
 (def blues
   (list
                    [3 4]
@@ -76,6 +73,7 @@
 
                    [3 0]))
 
+; fails
 
 (defn hex-coord->svg-coord [[hex-x hex-y]]
   (let [x (+ 20 (* 40 hex-x) (if (odd? hex-y) 20 0))
@@ -120,10 +118,9 @@
          (map hex-coord->svg-coord)
          (mapv draw coords))))
 
-(draw-rings svg rings)
-(draw-marbles svg reds "red")
-(draw-marbles svg blues "blue")
+(defn draw []
+  (dommy/append! (sel1 :body) svg)
+  (draw-rings svg rings)
+  (draw-marbles svg reds "red")
+  (draw-marbles svg blues "blue"))
 
-; (draw-coords svg rings)
-
-)
