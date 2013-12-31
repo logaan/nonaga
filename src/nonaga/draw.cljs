@@ -48,7 +48,6 @@
             :r 8
             :fill color))
 
-; Seriously. wtf. why does this crash phantom?
 (def rings
   #{   [1 4] [2 4] [3 4]
      [0 3] [1 3] [2 3] [3 3]
@@ -57,23 +56,19 @@
        [1 0] [2 0] [3 0]})
 
 (def reds
-  (list
-       [1 4]
+  #{   [1 4]
 
                            [4 2]
 
-       [1 0]))
+       [1 0]})
 
 
 (def blues
-  (list
-                   [3 4]
+  #{               [3 4]
 
    [0 2]
 
-                   [3 0]))
-
-; fails
+                   [3 0]})
 
 (defn hex-coord->svg-coord [[hex-x hex-y]]
   (let [x (+ 20 (* 40 hex-x) (if (odd? hex-y) 20 0))
