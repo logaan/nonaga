@@ -6,10 +6,9 @@
   (:use-macros
     [dommy.macros :only [node sel sel1]]))
 
- 
-  (extend-type object
-   dommy.template/PElement
-   (-elem [this] this))
+(extend-type object
+  dommy.template/PElement
+  (-elem [this] this))
 
 (defn log [stuff]
   (.log js/console (clj->js stuff)))

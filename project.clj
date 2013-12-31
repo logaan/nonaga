@@ -10,6 +10,7 @@
                  [com.cemerick/clojurescript.test "0.2.1"]]
   :plugins [[lein-cljsbuild "1.0.1"]
             [com.cemerick/clojurescript.test "0.2.1"]]
+  :hooks  [leiningen.cljsbuild]
   :cljsbuild {:builds {:dev {:source-paths ["src"]
                              :compiler {:output-to "resources/js/main.js"
                                         :optimizations :whitespace
