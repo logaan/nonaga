@@ -1,9 +1,7 @@
 ; This should be becoming the game ns. It'll contain functions that make use of
 ; game/board objects.
 (ns nonaga.core
-  (:require [clojure.set :refer [difference]])
-  (:use [nonaga.rules.coord :only [directions neighbouring-directions
-                                   tag-with-distance]]))
+  (:use [nonaga.rules.coord :only [directions]]))
 
 (def initial-game
   {:rings
@@ -40,45 +38,4 @@
 
 (defn valid-destinations [board coord]
   (disj (into #{} (map (partial move board coord) directions)) coord))
-
-; Ring
-; Should not be sliding into another ring.
-; Should not be sliding between two rings.
-(defn valid-slide? [{:keys [rings]} coord direction]
-  (let [sliding-into-ring? (rings (direction coord))
-        gap-too-small? (apply #(and %1 %2)
-                              (map rings
-                                   (map #(% coord)
-                                        (neighbouring-directions direction))))]
-    (not (or sliding-into-ring? gap-too-small?))))
-
-; Ring
-(defn valid-slides [board coord]
-  (filter (partial valid-slide? board coord)
-          (keys neighbouring-directions)))
-
-(defn neighbour-distances [grid source destination]
-  (->> (valid-slides grid source)
-       (map #(% source))
-       (map (partial tag-with-distance destination))))
-
-(defn move-towards
-  ([board source destination]
-   (if ((:rings board) destination)
-     false
-     (move-towards board
-                   (sorted-set (tag-with-distance destination source))
-                   (sorted-set)
-                   destination
-                   0)))
-  ([board unexploded exploded destination count]
-   (let [next-choice    (first unexploded)
-         [_ source]     next-choice
-         explosion      (neighbour-distances board source destination)
-         new-exploded   (conj exploded next-choice) 
-         new-unexploded (difference (into unexploded explosion) new-exploded)]
-     (if (new-unexploded [0 destination]) true
-       (if (empty? new-unexploded) false
-         (if (> count 500) false
-           (recur board new-unexploded new-exploded destination (inc count))))))))
 
