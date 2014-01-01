@@ -23,28 +23,6 @@
   (.renderComponent js/React component node))
 ; --- end react stuff ---
 
-(def rings
-  #{   [1 4] [2 4] [3 4]
-     [0 3] [1 3] [2 3] [3 3]
-   [0 2] [1 2] [2 2] [3 2] [4 2]
-     [0 1] [1 1] [2 1] [3 1]
-       [1 0] [2 0] [3 0]})
-
-(def reds
-  #{   [1 4]
-
-                           [4 2]
-
-       [1 0]})
-
-
-(def blues
-  #{               [3 4]
-
-   [0 2]
-
-                   [3 0]})
-
 (defn hex-coord->svg-coord [[hex-x hex-y]]
   (let [x (+ 20 (* 40 hex-x) (if (odd? hex-y) 20 0))
         y (+ 20 (* 40 hex-y))]
@@ -71,8 +49,8 @@
   (create-class
     "render" (fn []
                (svg {}
-                    (clj->js (draw-rings rings))))))
+                    (clj->js (draw-rings (:rings n/initial-game)))))))
 
 (defn start []
-  (render-component (board (js-obj "rings" rings)) (sel1 :#content)))
+  (render-component (board) (sel1 :#content)))
 
