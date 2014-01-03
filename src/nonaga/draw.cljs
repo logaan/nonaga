@@ -31,6 +31,7 @@
             "r"       8
             "fill"    color
             "onClick" click
+            "style"   {"cursor" (if click "pointer")}
             "key"     (str "marble" x "," y)})))
 
 (defn draw [shape coords]
@@ -52,8 +53,9 @@
 
 (defn start-marble-move [component color coord]
   (fn []
-    (let [state (assoc (.-wrapper (.-state component)) :event [:marble-move color coord])]
-      (.setState component #js {:wrapper state}))))
+    (let [old-state (.-wrapper (.-state component))
+          new-state (assoc old-state :event [:marble-move color coord])]
+      (.setState component #js {:wrapper new-state}))))
 
 (def board
   (create-class
