@@ -36,6 +36,9 @@
 (defn draw [shape coords]
   (map (comp shape hex->svg) coords))
 
+(defn draw-marbles [color coords click]
+  (map #(marble color (click color %1) %2) coords (map hex->svg coords)))
+
 (def light-colors
   {"red" "pink"
    "blue" "lightblue"})
@@ -47,19 +50,24 @@
         (draw (partial marble (light-colors (name color)))
               (b/valid-destinations state selected))))))
 
+(defn start-marble-move [component color coord]
+  (fn []
+    (let [state (assoc (.-wrapper (.-state component)) :event [:marble-move color coord])]
+      (.setState component #js {:wrapper state}))))
+
 (def board
   (create-class
     "getInitialState"
-    (fn [] (assoc n/initial-game :event [:marble-move :red [1 4]]))
+    (fn [] #js {:wrapper n/initial-game})
     "render"
     (fn []
       (this-as this
-         (let [state (aget this "state")]
+         (let [state (.-wrapper (.-state this))]
            (svg {}
-             (draw ring (:rings state))
-             (draw (partial marble "red") (:whites state))
-             (draw (partial marble "blue") (:blacks state))
-             (draw-valid-marble-moves state)))))))
+                (draw ring (:rings state))
+                (draw-marbles "red"  (:whites state) (partial start-marble-move this))
+                (draw-marbles "blue" (:blacks state) (partial start-marble-move this))
+                (draw-valid-marble-moves state)))))))
 
 (defn start []
   (render-component (board) (sel1 :#content)))
