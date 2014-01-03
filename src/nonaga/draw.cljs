@@ -37,11 +37,15 @@
 
 (def board
   (create-class
-    "render" (fn []
+    "getInitialState"
+    (fn [] n/initial-game)
+    "render"
+    (fn []
+      (this-as this
                (svg {}
-                    (draw ring (:rings n/initial-game))
-                    (draw (partial marble "red") (:whites n/initial-game))
-                    (draw (partial marble "blue") (:blacks n/initial-game))))))
+                 (draw ring (:rings (.-state this)))
+                 (draw (partial marble "red") (:whites (.-state this)))
+                 (draw (partial marble "blue") (:blacks (.-state this))))))))
 
 (defn start []
   (render-component (board) (sel1 :#content)))
