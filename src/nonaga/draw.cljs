@@ -4,35 +4,44 @@
   (:use-macros [dommy.macros :only [sel1]]))
 
 (defn hex->svg [[hex-x hex-y]]
-  (let [x (+ 20 (* 40 hex-x) (if (odd? hex-y) 20 0))
-        y (+ 20 (* 40 hex-y))]
-    [x y]))
+  (let [width  40
+        half (/ width 2)
+        svg-x (+ half (* width hex-x) (if (odd? hex-y) half 0))
+        svg-y (+ half (* width hex-y))]
+    [svg-x svg-y]))
 
-(defn ring [[x y :as coord]]
-  (circle {"cx"          x
-           "cy"          y
-           "r"           14
-           "fill"        "transparent"
-           "stroke"      "grey"
-           "strokeWidth" "7px"
-           "key"         (str "ring:" x "," y)}))
+(defn ring
+  ([coord] (ring nil coord))
+  ([click [x y :as coord]]
+   (circle {"cx"          x
+            "cy"          y
+            "r"           14
+            "fill"        "transparent"
+            "stroke"      "grey"
+            "strokeWidth" "7px"
+            "onClick"     click
+            "key"         (str "ring:" x "," y)})))
 
-(defn marble [color [x y :as coord]]
-  (circle {"cx"   x
-           "cy"   y
-           "r"    8
-           "fill" color
-           "key"  (str "marble" x "," y)}))
+(defn marble
+  ([color coord] (marble color nil coord))
+  ([color click [x y :as coord]]
+   (circle {"cx"      x
+            "cy"      y
+            "r"       8
+            "fill"    color
+            "onClick" click
+            "key"     (str "marble" x "," y)})))
 
 (defn draw [shape coords]
   (map (comp shape hex->svg) coords))
 
 (def board
   (create-class
-    "render" #(svg {}
-                   (draw ring (:rings n/initial-game))
-                   (draw (partial marble "red") (:whites n/initial-game))
-                   (draw (partial marble "blue") (:blacks n/initial-game)))))
+    "render" (fn []
+               (svg {}
+                    (draw ring (:rings n/initial-game))
+                    (draw (partial marble "red") (:whites n/initial-game))
+                    (draw (partial marble "blue") (:blacks n/initial-game))))))
 
 (defn start []
   (render-component (board) (sel1 :#content)))
