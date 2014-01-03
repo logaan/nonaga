@@ -1,6 +1,7 @@
 (ns nonaga.draw
   (:use [nonaga.react :only [circle svg create-class render-component]])
-  (:require [nonaga.core :as n])
+  (:require [nonaga.core :as n]
+            [nonaga.rules.ball :as b])
   (:use-macros [dommy.macros :only [sel1]]))
 
 (defn hex->svg [[hex-x hex-y]]
@@ -35,17 +36,30 @@
 (defn draw [shape coords]
   (map (comp shape hex->svg) coords))
 
+(def light-colors
+  {"red" "pink"
+   "blue" "lightblue"})
+
+(defn draw-valid-marble-moves [state]
+  (let [[type & event-data] (:event state)]
+    (when (= :marble-move type)
+      (let [[color selected] event-data]
+        (draw (partial marble (light-colors (name color)))
+              (b/valid-destinations state selected))))))
+
 (def board
   (create-class
     "getInitialState"
-    (fn [] n/initial-game)
+    (fn [] (assoc n/initial-game :event [:marble-move :red [1 4]]))
     "render"
     (fn []
       (this-as this
-               (svg {}
-                 (draw ring (:rings (.-state this)))
-                 (draw (partial marble "red") (:whites (.-state this)))
-                 (draw (partial marble "blue") (:blacks (.-state this))))))))
+         (let [state (aget this "state")]
+           (svg {}
+             (draw ring (:rings state))
+             (draw (partial marble "red") (:whites state))
+             (draw (partial marble "blue") (:blacks state))
+             (draw-valid-marble-moves state)))))))
 
 (defn start []
   (render-component (board) (sel1 :#content)))
