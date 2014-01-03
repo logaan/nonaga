@@ -1,7 +1,7 @@
 (ns nonaga.wrapper)
 
-(defn svg [props child]
-  (js/React.DOM.svg (clj->js props) (clj->js child)))
+(defn svg [props & children]
+  (js/React.DOM.svg (clj->js props) (clj->js children)))
 
 (defn circle [props]
   (js/React.DOM.circle (clj->js props)))

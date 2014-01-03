@@ -17,9 +17,22 @@
            "strokeWidth" "7px"
            "key"         (str "ring:" x "," y)}))
 
+(defn marble [color [x y :as coord]]
+  (circle {"cx"   x
+           "cy"   y
+           "r"    8
+           "fill" color
+           "key"  (str "marble" x "," y)}))
+
+(defn draw [shape coords]
+  (map (comp shape hex->svg) coords))
+
 (def board
   (create-class
-    "render" #(svg {} (map (comp ring hex->svg) (:rings n/initial-game)))))
+    "render" #(svg {}
+                   (draw ring (:rings n/initial-game))
+                   (draw (partial marble "red") (:whites n/initial-game))
+                   (draw (partial marble "blue") (:blacks n/initial-game)))))
 
 (defn start []
   (render-component (board) (sel1 :#content)))
