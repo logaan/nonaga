@@ -4,6 +4,17 @@
             [nonaga.rules.ball :as b])
   (:use-macros [dommy.macros :only [sel1]]))
 
+; Events
+;
+; [:turn-began      :red]
+; [:marble-selected :red coords]
+; [:marble-moved    :red]
+; [:ring-selected   :ring coords]
+; [:turn-began      :blue]
+; [:marble-selected :blue coords]
+; [:marble-moved    :blue]
+; [:ring-selected   :blue coords]
+
 (defn hex->svg [[hex-x hex-y]]
   (let [width  40
         half (/ width 2)
@@ -70,7 +81,9 @@
 (def board
   (create-class
     "getInitialState"
-    (fn [] #js {:wrapper n/initial-game})
+    (fn []
+      (let [initial-state (assoc n/initial-game :event [:turn-began :red])]
+        #js {:wrapper initial-state}))
     "render"
     (fn []
       (this-as this
