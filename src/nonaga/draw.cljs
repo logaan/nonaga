@@ -48,6 +48,10 @@
 (defn draw [shape coords]
   (map (comp shape hex->svg) coords))
 
+(def opposite
+  {:red :blue
+   :blue :red})
+
 (def light-colors
   {:red :pink
    :blue :lightblue})
@@ -60,7 +64,7 @@
 (defn move-marble [component color from to]
   (update-state component
                 #(-> % (n/move-ball color from to)
-                     (assoc :event [:marble-moved color]))))
+                     (assoc :event [:turn-began (opposite color)]))))
 
 (defn draw-valid-marble-moves [component state]
   (let [[type & event-data] (:event state)]
