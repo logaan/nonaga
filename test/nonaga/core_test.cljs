@@ -3,7 +3,7 @@
   (:require [nonaga.core :as c]
             [cemerick.cljs.test :as t]))
 
-(def after-white-move
+(def after-red-move
   {:rings
     #{   [1 4] [2 4] [3 4]
        [0 3] [1 3] [2 3] [3 3]
@@ -11,14 +11,14 @@
        [0 1] [1 1] [2 1] [3 1]
          [1 0] [2 0] [3 0]}
 
-   :whites
+   :red
     #{
 
                              [4 2]
 
          [1 0]       [3 0]}
 
-   :blacks
+   :blue
     #{               [3 4]
 
      [0 2]
@@ -26,7 +26,7 @@
                      [3 0]}})
 
 (deftest ball-move
-  (is (= after-white-move (c/move-ball c/initial-game :whites [1 4] [3 0]))))
+  (is (= after-red-move (c/move-ball c/initial-game :red [1 4] [3 0]))))
 
 (def after-ring-move
   {:rings
@@ -36,14 +36,14 @@
        [0 1] [1 1] [2 1] [3 1]
          [1 0] [2 0] [3 0] [4 0]}
 
-   :whites
+   :red
     #{   [1 4]
 
                              [4 2]
 
          [1 0]}
 
-   :blacks
+   :blue
     #{               [3 4]
 
      [0 2]
