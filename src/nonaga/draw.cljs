@@ -44,14 +44,15 @@
   {:red :pink
    :blue :lightblue})
 
-; the state grabbing and updating, as well as the fn wrapping can be moved out
-; of this and start-marble-move
-(defn move-marble [component color from to]
+(defn update-state [component update-fn]
   (fn []
-    (let [old-state (.-wrapper (.-state component))
-          moved     (n/move-ball old-state color from to)
-          new-state (assoc moved :event [:marble-moved color])]
-      (.setState component #js {:wrapper new-state}))))
+    (let [old-state (.-wrapper (.-state component))]
+      (.setState component #js {:wrapper (update-fn old-state)}))))
+
+(defn move-marble [component color from to]
+  (update-state component
+                #(-> % (n/move-ball color from to)
+                     (assoc :event [:marble-moved color]))))
 
 (defn draw-valid-marble-moves [component state]
   (let [[type & event-data] (:event state)]
@@ -64,10 +65,7 @@
               (b/valid-destinations state selected))))))
 
 (defn start-marble-move [component color coord]
-  (fn []
-    (let [old-state (.-wrapper (.-state component))
-          new-state (assoc old-state :event [:marble-move color coord])]
-      (.setState component #js {:wrapper new-state}))))
+  (update-state component #(assoc % :event [:marble-move color coord])))
 
 (def board
   (create-class
