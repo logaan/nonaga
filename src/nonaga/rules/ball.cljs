@@ -1,10 +1,10 @@
 (ns nonaga.rules.ball
   (:use [nonaga.rules.coord :only [directions]]))
 
-(defn invalid-space? [{:keys [rings whites blacks]} coord]
+(defn invalid-space? [{:keys [rings red blue]} coord]
   (not (and (rings coord)
-            (not (or (whites coord)
-                     (blacks coord))))))
+            (not (or (red coord)
+                     (blue coord))))))
 
 (defn move [board coord direction]
   (first

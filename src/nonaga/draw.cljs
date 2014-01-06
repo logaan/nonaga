@@ -29,7 +29,7 @@
    (circle {"cx"      x
             "cy"      y
             "r"       8
-            "fill"    color
+            "fill"    (name color)
             "onClick" click
             "style"   {"cursor" (if click "pointer")}
             "key"     (str "marble" x "," y)})))
@@ -41,8 +41,8 @@
   (map #(marble color (click color %1) %2) coords (map hex->svg coords)))
 
 (def light-colors
-  {"red" "pink"
-   "blue" "lightblue"})
+  {:red :pink
+   :blue :lightblue})
 
 ; the state grabbing and updating, as well as the fn wrapping can be moved out
 ; of this and start-marble-move
@@ -59,7 +59,7 @@
     (when (= :marble-move type)
       (let [[color selected] event-data
             click (move-marble component color selected [2 2])]
-        (draw (partial marble (light-colors (name color)) click)
+        (draw (partial marble (light-colors color) click)
               (b/valid-destinations state selected))))))
 
 (defn start-marble-move [component color coord]
@@ -76,10 +76,11 @@
     (fn []
       (this-as this
          (let [state (.-wrapper (.-state this))]
+           (js/console.log (clj->js state))
            (svg {}
                 (draw ring (:rings state))
-                (draw-marbles "red"  (:whites state) (partial start-marble-move this))
-                (draw-marbles "blue" (:blacks state) (partial start-marble-move this))
+                (draw-marbles :red  (:red state) (partial start-marble-move this))
+                (draw-marbles :blue (:blue state) (partial start-marble-move this))
                 (draw-valid-marble-moves this state)))))))
 
 (defn start []
