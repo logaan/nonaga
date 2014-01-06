@@ -76,10 +76,11 @@
   (update-state component #(assoc % :event [:marble-selected color coord])))
 
 (defn draw-marbles [component state color]
-  (let [current-player (get-in state [:event 1])
-        coords         (color state)
-        click          (partial start-marble-move component)]
-    (map #(marble color (click color %1) %2) coords (map hex->svg coords))))
+  (let [cp     (get-in state [:event 1])
+        coords (color state)
+        click  (partial start-marble-move component)]
+    (map (fn [hex svg] (marble color (if (= cp color) (click color hex)) svg))
+         coords (map hex->svg coords))))
 
 (def board
   (create-class
@@ -93,7 +94,7 @@
          (let [state (.-wrapper (.-state this)) ]
            (svg {}
                 (draw ring (:rings state))
-                (draw-marbles this state :red )
+                (draw-marbles this state :red)
                 (draw-marbles this state :blue)
                 (draw-valid-marble-moves this state)))))))
 
