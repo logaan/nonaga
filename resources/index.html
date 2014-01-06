@@ -1,6 +1,53 @@
 <html>
+  <head>
+    <style>
+      #description {
+        font: 17px/1.55 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: #000;
+        font-weight: 300;
+        margin-top: 20px;
+        margin-bottom: 50px;
+        margin-left: 320px;
+      }
+      #content {
+        float: left;
+        margin-left: 20px;
+        margin-top: 20px;
+        width: 300px;
+      }
+    </style>
+  </head>
   <body>
     <div id="content"></div>
+    <div id="description">
+      <p><strong>Nonaga</strong> is a modern abstract tabletop game from Spain.</p>
+
+      <p>On your turn you must:</p>
+
+      <ol>
+        <li>Move one of your marbles in a straight line as far as it can go.</li>
+        <li>
+          Slide a ring to a position where it touches two other rings.
+          <ol>
+            <li>Your ring must be unobstructed.</li>
+            <li>It may only pass through gaps of size 2 or larger.</li>
+            <li> You may not slide the ring your opponent slid last turn.</li>
+          </ol>
+        </li>
+      </ol>
+
+      <p>
+        A player wins when all of their marbles touch at least one of their
+        other marbles.
+      </p>
+
+      <p>
+        <em>
+          The current implementation does not support moving rings or win
+          detection.
+        </em>
+      </p>
+    </div>
     <script src="js/react-0.8.0.js"></script>
     <script src="js/main.js"></script>
     <script>
