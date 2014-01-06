@@ -22,3 +22,9 @@
        
                      [3 0]}})
 
+(defn move-ball [game color from to]
+  (update-in game [color] #(-> % (disj from) (conj to))))
+
+(defn move-ring [game from to]
+  (update-in game [:rings] #(-> % (disj from) (conj to))))
+
