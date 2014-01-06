@@ -44,11 +44,22 @@
   {"red" "pink"
    "blue" "lightblue"})
 
-(defn draw-valid-marble-moves [state]
+; the state grabbing and updating, as well as the fn wrapping can be moved out
+; of this and start-marble-move
+(defn move-marble [component color from to]
+  (fn []
+    (js/console.log "kittens")
+    (let [old-state (.-wrapper (.-state component))
+          moved     (n/move-ball old-state color from to)
+          new-state (assoc moved :event [:marble-moved color])]
+      (.setState component #js {:wrapper new-state}))))
+
+(defn draw-valid-marble-moves [component state]
   (let [[type & event-data] (:event state)]
     (when (= :marble-move type)
-      (let [[color selected] event-data]
-        (draw (partial marble (light-colors (name color)))
+      (let [[color selected] event-data
+            click (move-marble component color selected [2 2])]
+        (draw (partial marble (light-colors (name color)) click)
               (b/valid-destinations state selected))))))
 
 (defn start-marble-move [component color coord]
@@ -69,7 +80,7 @@
                 (draw ring (:rings state))
                 (draw-marbles "red"  (:whites state) (partial start-marble-move this))
                 (draw-marbles "blue" (:blacks state) (partial start-marble-move this))
-                (draw-valid-marble-moves state)))))))
+                (draw-valid-marble-moves this state)))))))
 
 (defn start []
   (render-component (board) (sel1 :#content)))
