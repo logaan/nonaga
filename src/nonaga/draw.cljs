@@ -48,7 +48,6 @@
 ; of this and start-marble-move
 (defn move-marble [component color from to]
   (fn []
-    (js/console.log "kittens")
     (let [old-state (.-wrapper (.-state component))
           moved     (n/move-ball old-state color from to)
           new-state (assoc moved :event [:marble-moved color])]
@@ -57,9 +56,11 @@
 (defn draw-valid-marble-moves [component state]
   (let [[type & event-data] (:event state)]
     (when (= :marble-move type)
-      (let [[color selected] event-data
-            click (move-marble component color selected [2 2])]
-        (draw (partial marble (light-colors color) click)
+      (let [[color selected] event-data]
+        (map (fn [hex]
+               (marble (light-colors color)
+                       (move-marble component color selected hex)
+                       (hex->svg hex)))
               (b/valid-destinations state selected))))))
 
 (defn start-marble-move [component color coord]
@@ -76,7 +77,6 @@
     (fn []
       (this-as this
          (let [state (.-wrapper (.-state this))]
-           (js/console.log (clj->js state))
            (svg {}
                 (draw ring (:rings state))
                 (draw-marbles :red  (:red state) (partial start-marble-move this))
