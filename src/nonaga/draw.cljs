@@ -48,9 +48,6 @@
 (defn draw [shape coords]
   (map (comp shape hex->svg) coords))
 
-(defn draw-marbles [color coords click]
-  (map #(marble color (click color %1) %2) coords (map hex->svg coords)))
-
 (def light-colors
   {:red :pink
    :blue :lightblue})
@@ -67,7 +64,7 @@
 
 (defn draw-valid-marble-moves [component state]
   (let [[type & event-data] (:event state)]
-    (when (= :marble-move type)
+    (when (= :marble-selected type)
       (let [[color selected] event-data]
         (map (fn [hex]
                (marble (light-colors color)
@@ -76,7 +73,13 @@
               (b/valid-destinations state selected))))))
 
 (defn start-marble-move [component color coord]
-  (update-state component #(assoc % :event [:marble-move color coord])))
+  (update-state component #(assoc % :event [:marble-selected color coord])))
+
+(defn draw-marbles [component state color]
+  (let [current-player (get-in state [:event 1])
+        coords         (color state)
+        click          (partial start-marble-move component)]
+    (map #(marble color (click color %1) %2) coords (map hex->svg coords))))
 
 (def board
   (create-class
@@ -87,11 +90,11 @@
     "render"
     (fn []
       (this-as this
-         (let [state (.-wrapper (.-state this))]
+         (let [state (.-wrapper (.-state this)) ]
            (svg {}
                 (draw ring (:rings state))
-                (draw-marbles :red  (:red state) (partial start-marble-move this))
-                (draw-marbles :blue (:blue state) (partial start-marble-move this))
+                (draw-marbles this state :red )
+                (draw-marbles this state :blue)
                 (draw-valid-marble-moves this state)))))))
 
 (defn start []
