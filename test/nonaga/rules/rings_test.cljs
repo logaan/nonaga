@@ -1,7 +1,8 @@
 (ns nonaga.rules.ring-test
   (:require-macros [cemerick.cljs.test :refer (deftest is are)])
   (:use [nonaga.core :only [initial-game]]
-        [nonaga.rules.rings :only [valid-slide? valid-slides move-towards]]
+        [nonaga.rules.rings :only [valid-slide? valid-slides can-move-to?
+                                   valid-destinations]]
         [nonaga.rules.coord :only [nw ne e se sw w]] )
   (:require [cemerick.cljs.test :as t]))
 
@@ -20,7 +21,7 @@
   (is (= 3 (count (valid-slides board-with-gap [2 1])))) )
 
 (deftest path-finding
-  (are [valid? board] (= valid? (move-towards board [0 2] [4 2]))
+  (are [valid? board] (= valid? (can-move-to? board [0 2] [4 2]))
 
        ; No obstructions
        true
@@ -72,4 +73,9 @@
         [2 2]                   [6 2] 
           [2 1]             [5 1] 
             [3 0] [4 0] [5 0]}))
+
+(deftest knows-where-you-can-go
+  (is (= #{[4 3] [1 -1] [4 4] [0 0] [-1 1] [2 5] [-1 3] [0 4] [1 5] [4 0] [4 1]
+           [2 -1]}
+         (valid-destinations (:rings initial-game) [1 4]))))
 

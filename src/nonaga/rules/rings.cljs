@@ -1,6 +1,6 @@
 (ns nonaga.rules.rings
   (:require [clojure.set :refer [difference]])
-  (:use [nonaga.rules.coord :only [neighbouring-directions tag-with-distance]]))
+  (:use [nonaga.rules.coord :only [neighbours neighbouring-directions tag-with-distance]]))
 
 (defn valid-slide? [rings coord direction]
   (let [sliding-into-ring? (rings (direction coord))
@@ -19,11 +19,11 @@
        (map #(% source))
        (map (partial tag-with-distance destination))))
 
-(defn move-towards
+(defn can-move-to?
   ([rings source destination]
    (if (rings destination)
      false
-     (move-towards rings
+     (can-move-to? rings
                    (sorted-set (tag-with-distance destination source))
                    (sorted-set)
                    destination
@@ -38,4 +38,13 @@
        (if (empty? new-unexploded) false
          (if (> count 500) false
            (recur rings new-unexploded new-exploded destination (inc count))))))))
+
+(defn valid-destinations [rings source]
+  (let [candidates (->> (frequencies (mapcat neighbours rings))
+                        (filter (fn [[cell neighbours]] (< 1 neighbours 6)))
+                        (map first)
+                        (into #{}))
+        availables (difference candidates rings)
+        slidables  (filter (partial can-move-to? rings source) availables)]
+    (set slidables)))
 
