@@ -1,7 +1,8 @@
 (ns nonaga.draw
   (:use [nonaga.react :only [circle svg create-class render-component]])
   (:require [nonaga.core :as n]
-            [nonaga.rules.ball :as b])
+            [nonaga.rules.ball :as b]
+            [nonaga.rules.rings :as r])
   (:use-macros [dommy.macros :only [sel1]]))
 
 ; Events
@@ -18,18 +19,18 @@
 (defn hex->svg [[hex-x hex-y]]
   (let [width  40
         half (/ width 2)
-        svg-x (+ half (* width hex-x) (if (odd? hex-y) half 0))
-        svg-y (+ half (* width hex-y))]
+        svg-x (+ 100 (* width hex-x) (if (odd? hex-y) half 0))
+        svg-y (+ 100 (* width hex-y))]
     [svg-x svg-y]))
 
 (defn ring
-  ([coord] (ring nil coord))
-  ([click [x y :as coord]]
+  ([color coord] (ring color nil coord))
+  ([color click [x y :as coord]]
    (circle {"cx"          x
             "cy"          y
             "r"           14
             "fill"        "transparent"
-            "stroke"      "grey"
+            "stroke"      color
             "strokeWidth" "7px"
             "onClick"     click
             "key"         (str "ring:" x "," y)})))
@@ -86,18 +87,25 @@
     (map (fn [hex svg] (marble color (if (= cp color) (click color hex)) svg))
          coords (map hex->svg coords))))
 
+(defn print-state []
+  (js/console.log (str (.-wrapper (.-state js/board))))
+  false)
+
 (def board
   (create-class
     "getInitialState"
     (fn []
-      (let [initial-state (assoc n/initial-game :event [:turn-began :red])]
-        #js {:wrapper initial-state}))
+      (this-as this
+               (aset js/window "board" this)
+               (let [initial-state (assoc n/initial-game :event [:turn-began :red])]
+                 #js {:wrapper initial-state})))
     "render"
     (fn []
       (this-as this
          (let [state (.-wrapper (.-state this)) ]
-           (svg {}
-                (draw ring (:rings state))
+           (svg {:width 400 :height 400}
+                (draw (partial ring "grey") (:rings state))
+                ;(draw (partial ring "lightgrey") (r/valid-destinations (:rings state) [1 4]))
                 (draw-marbles this state :red)
                 (draw-marbles this state :blue)
                 (draw-valid-marble-moves this state)))))))

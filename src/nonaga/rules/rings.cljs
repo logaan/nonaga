@@ -39,6 +39,7 @@
          (if (> count 500) false
            (recur rings new-unexploded new-exploded destination (inc count))))))))
 
+; Should remvoe the ring that is being moved
 (defn valid-destinations [rings source]
   (let [candidates (->> (frequencies (mapcat neighbours rings))
                         (filter (fn [[cell neighbours]] (< 1 neighbours 6)))
