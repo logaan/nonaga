@@ -1,3 +1,4 @@
+; You shouldn't be able to move your marble once you've entered :marble-moved
 (ns nonaga.draw
   (:use [nonaga.react :only [circle svg create-class render-component]])
   (:require [nonaga.core :as n]
@@ -32,6 +33,7 @@
             "fill"        "transparent"
             "stroke"      color
             "strokeWidth" "7px"
+            "style"       {"cursor" (if click "pointer")}
             "onClick"     click
             "key"         (str "ring:" x "," y)})))
 
@@ -45,9 +47,6 @@
             "onClick" click
             "style"   {"cursor" (if click "pointer")}
             "key"     (str "marble" x "," y)})))
-
-(defn draw [shape coords]
-  (map (comp shape hex->svg) coords))
 
 (def opposite
   {:red :blue
@@ -65,7 +64,7 @@
 (defn move-marble [component color from to]
   (update-state component
                 #(-> % (n/move-ball color from to)
-                     (assoc :event [:turn-began (opposite color)]))))
+                     (assoc :event [:marble-moved color]))))
 
 (defn draw-valid-marble-moves [component state]
   (let [[type & event-data] (:event state)]
@@ -91,6 +90,30 @@
   (js/console.log (str (.-wrapper (.-state js/board))))
   false)
 
+; This shit is the same as start-marble-move
+(defn ring-selected [component color coord]
+  (update-state component #(assoc % :event [:ring-selected color coord])))
+
+(defn draw-rings [component state]
+  (let [[type & event-data] (:event state)
+        coords (:rings state)]
+    (map (fn [hex svg]
+           (let [click (if (= :marble-moved type)
+                         (let [[color] event-data]
+                           (ring-selected component color hex)))]
+             (ring "grey" click svg)))
+         coords (map hex->svg coords))))
+
+; These things should be a multi method that dispatches on state. Or I could
+; have state records with a draw protocol.
+(defn draw-potential-rings [component state]
+  (let [[type & event-data] (:event state)
+        coords (:rings state)]
+    (if (= :ring-selected type)
+      (let [[color coord] event-data]
+        (map (comp (partial ring "lightgrey") hex->svg)
+             (r/valid-destinations coords coord))))))
+
 (def board
   (create-class
     "getInitialState"
@@ -104,8 +127,8 @@
       (this-as this
          (let [state (.-wrapper (.-state this)) ]
            (svg {:width 400 :height 400}
-                (draw (partial ring "grey") (:rings state))
-                ;(draw (partial ring "lightgrey") (r/valid-destinations (:rings state) [1 4]))
+                (draw-rings this state)
+                (draw-potential-rings this state)
                 (draw-marbles this state :red)
                 (draw-marbles this state :blue)
                 (draw-valid-marble-moves this state)))))))
