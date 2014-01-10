@@ -1,4 +1,3 @@
-; You shouldn't be able to move your marble once you've entered :marble-moved
 (ns nonaga.draw
   (:use [nonaga.react :only [circle svg create-class render-component]])
   (:require [nonaga.core :as n]
@@ -79,6 +78,7 @@
 (defn start-marble-move [component color coord]
   (update-state component #(assoc % :event [:marble-selected color coord])))
 
+; You shouldn't be able to move your marble once you've entered :marble-moved
 (defn draw-marbles [component state color]
   (let [cp     (get-in state [:event 1])
         coords (color state)
@@ -90,7 +90,7 @@
   (js/console.log (str (.-wrapper (.-state js/board))))
   false)
 
-; This shit is the same as start-marble-move
+; This is the same as start-marble-move
 (defn ring-selected [component color coord]
   (update-state component #(assoc % :event [:ring-selected color coord])))
 
