@@ -98,7 +98,7 @@
   (let [[type & event-data] (:event state)
         coords (:rings state)]
     (map (fn [hex svg]
-           (let [click (if (= :marble-moved type)
+           (let [click (if (or (= :marble-moved type) (= :ring-selected type))
                          (let [[color] event-data]
                            (ring-selected component color hex)))]
              (ring "grey" click svg)))

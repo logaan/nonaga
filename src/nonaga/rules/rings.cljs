@@ -41,7 +41,8 @@
 
 ; Should remvoe the ring that is being moved
 (defn valid-destinations [rings source]
-  (let [candidates (->> (frequencies (mapcat neighbours rings))
+  (let [other-rings (disj rings source)
+        candidates (->> (frequencies (mapcat neighbours other-rings))
                         (filter (fn [[cell neighbours]] (< 1 neighbours 6)))
                         (map first)
                         (into #{}))
