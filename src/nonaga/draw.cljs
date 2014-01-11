@@ -115,10 +115,12 @@
   (let [[type & event-data] (:event state)
         coords (:rings state)]
     (map (fn [hex svg]
-           (let [click (if (or (= :marble-moved type) (= :ring-selected type))
-                         (let [[color] event-data]
-                           (ring-selected component color hex)))]
-             (ring "grey" click svg)))
+           (if (and (or (= :marble-moved type)
+                        (= :ring-selected type))
+                    (r/can-be-moved? state hex))
+             (let [[color] event-data]
+               (ring "#444" (ring-selected component color hex) svg))
+             (ring "#999" svg)))
          coords (map hex->svg coords))))
 
 ; Same as move-marble
@@ -137,7 +139,7 @@
       (let [[color source] event-data
             destinations (r/valid-destinations coords source)]
         (map (fn [hex svg]
-               (ring "lightgrey" (move-ring component color source hex) svg))
+               (ring "#DDD" (move-ring component color source hex) svg))
              destinations (map hex->svg destinations))))))
 
 (def color-name
@@ -177,7 +179,7 @@
                            (draw-rings this state)
                            (draw-potential-rings this state)
                            (if-let [last-ring (:last-ring state)]
-                             (ring "#444" (hex->svg last-ring)))      
+                             (ring "#000" (hex->svg last-ring)))      
                            (draw-marbles this state :red)
                            (draw-marbles this state :blue)
                            (draw-valid-marble-moves this state))))))))
