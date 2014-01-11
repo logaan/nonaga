@@ -7,14 +7,27 @@
 
 ; Events
 ;
-; [:turn-began      :red]
+; [:turn-began :red]
+; - Clickable red marbles
 ; [:marble-selected :red coords]
-; [:marble-moved    :red]
-; [:ring-selected   :ring coords]
-; [:turn-began      :blue]
+; - Clickable red marbles
+; - Clickable pink marbles
+; [:marble-moved :red]
+; - Clickable moveable rings
+; [:ring-selected :ring coords]
+; - Clickable moveable rings
+; - Clickable light grey rings
+;
+; [:turn-began :blue]
+; - Clickable blue marbles
 ; [:marble-selected :blue coords]
-; [:marble-moved    :blue]
-; [:ring-selected   :blue coords]
+; - Clickable blue marbles
+; - Clickable pink marbles
+; [:marble-moved :blue]
+; - Clickable moveable rings
+; [:ring-selected :ring coords]
+; - Clickable moveable rings
+; - Clickable light grey rings
 
 (defn hex->svg [[hex-x hex-y]]
   (let [width  40
@@ -94,6 +107,9 @@
 (defn ring-selected [component color coord]
   (update-state component #(assoc % :event [:ring-selected color coord])))
 
+; To be able to be moved must have:
+; - At least a gap of two
+; - No ball on top
 (defn draw-rings [component state]
   (let [[type & event-data] (:event state)
         coords (:rings state)]

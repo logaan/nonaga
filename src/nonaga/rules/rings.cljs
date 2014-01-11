@@ -36,7 +36,7 @@
          new-unexploded (difference (into unexploded explosion) new-exploded)]
      (if (new-unexploded [0 destination]) true
        (if (empty? new-unexploded) false
-         (if (> count 500) false
+         (if (> count 100) false
            (recur rings new-unexploded new-exploded destination (inc count))))))))
 
 ; Should remvoe the ring that is being moved
