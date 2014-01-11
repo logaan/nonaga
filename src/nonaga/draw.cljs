@@ -32,8 +32,8 @@
 (defn hex->svg [[hex-x hex-y]]
   (let [width  40
         half (/ width 2)
-        svg-x (+ 100 (* width hex-x) (if (odd? hex-y) half 0))
-        svg-y (+ 100 (* width hex-y))]
+        svg-x (+ 160 (* width hex-x) (if (odd? hex-y) half 0))
+        svg-y (+ 160 (* width hex-y))]
     [svg-x svg-y]))
 
 (defn ring
@@ -147,7 +147,7 @@
     (fn []
       (this-as this
          (let [state (.-wrapper (.-state this)) ]
-           (svg {:width "100%" :height 400}
+           (svg {:width 480 :height 480}
                 (draw-rings this state)
                 (draw-potential-rings this state)
                 (if-let [last-ring (:last-ring state)]
