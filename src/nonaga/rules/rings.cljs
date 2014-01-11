@@ -50,6 +50,7 @@
         slidables  (filter (partial can-move-to? rings source) availables)]
     (set slidables)))
 
+; To be able to be moved must have At least a gap of two
 (defn can-be-moved? [{:keys [rings red blue]} coord]
   (let [num-neighbours (count (intersection (neighbours coord) rings))]
     (and (rings coord)

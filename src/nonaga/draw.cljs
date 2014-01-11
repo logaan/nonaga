@@ -107,10 +107,6 @@
 (defn ring-selected [component color coord]
   (update-state component #(assoc % :event [:ring-selected color coord])))
 
-; To be able to be moved must have:
-; - At least a gap of two
-; - No ball on top
-; Selectable rings should be indicated
 (defn draw-rings [component state]
   (let [[type & event-data] (:event state)
         coords (:rings state)]
