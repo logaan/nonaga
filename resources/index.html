@@ -5,20 +5,26 @@
         font: 17px/1.55 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
         color: #000;
         font-weight: 300;
+        margin: 0px;
+        padding: 0px;
       }
       #description {
-        margin-top: 20px;
+        margin-top: 165px;
         margin-bottom: 50px;
         margin-left: 520px;
       }
       #content {
         float: left;
         margin-left: 20px;
-        margin-top: 20px;
+        margin-top: -145px;
+        margin-bottom: 20px;
         width: 480px;
       }
       #instructions {
         text-align: center;
+      }
+      #content {
+        border: 1px solid #AAA;
       }
     </style>
   </head>
@@ -44,10 +50,7 @@
         </li>
       </ol>
 
-      <p>
-        A player wins when all of their marbles touch at least one of their
-        other marbles.
-      </p>
+      <p>A player wins when any of their marbles touches both other marbles.</p>
 
       <p>
         <em>The current implementation does not detect wins.</em>

@@ -91,12 +91,16 @@
 (defn start-marble-move [component color coord]
   (update-state component #(assoc % :event [:marble-selected color coord])))
 
-; You shouldn't be able to move your marble once you've entered :marble-moved
 (defn draw-marbles [component state color]
-  (let [cp     (get-in state [:event 1])
+  (let [etype  (get-in state [:event 0])
+        cp     (get-in state [:event 1])
         coords (color state)
         click  (partial start-marble-move component)]
-    (map (fn [hex svg] (marble color (if (= cp color) (click color hex)) svg))
+    (map (fn [hex svg]
+           (marble color (if (and (or (= etype :turn-began)
+                                      (= etype :marble-selected))
+                                  (= cp color))
+                           (click color hex)) svg))
          coords (map hex->svg coords))))
 
 ; This is the same as start-marble-move
@@ -106,6 +110,7 @@
 ; To be able to be moved must have:
 ; - At least a gap of two
 ; - No ball on top
+; Selectable rings should be indicated
 (defn draw-rings [component state]
   (let [[type & event-data] (:event state)
         coords (:rings state)]
