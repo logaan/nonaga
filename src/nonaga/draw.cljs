@@ -120,6 +120,7 @@
 (defn move-ring [component color from to]
   (update-state component
                 #(-> % (n/move-ring from to)
+                     (assoc :last-ring to)
                      (assoc :event [:turn-began (opposite color)]))))
 
 ; These things should be a multi method that dispatches on state. Or I could
@@ -139,8 +140,9 @@
     "getInitialState"
     (fn []
       (this-as this
-               (let [initial-state (assoc n/initial-game :event [:turn-began :red])]
-                 #js {:wrapper initial-state})))
+        (let [initial-state (-> n/initial-game
+                                (assoc :event [:turn-began :red]))]
+          #js {:wrapper initial-state})))
     "render"
     (fn []
       (this-as this
@@ -148,6 +150,8 @@
            (svg {:width "100%" :height 400}
                 (draw-rings this state)
                 (draw-potential-rings this state)
+                (if-let [last-ring (:last-ring state)]
+                  (ring "#444" (hex->svg last-ring)))      
                 (draw-marbles this state :red)
                 (draw-marbles this state :blue)
                 (draw-valid-marble-moves this state)))))))
