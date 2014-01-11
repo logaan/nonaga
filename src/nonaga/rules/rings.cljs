@@ -1,6 +1,7 @@
 (ns nonaga.rules.rings
-  (:require [clojure.set :refer [difference]])
-  (:use [nonaga.rules.coord :only [neighbours neighbouring-directions tag-with-distance]]))
+  (:require [clojure.set :refer [difference intersection]])
+  (:use [nonaga.rules.coord :only [neighbours neighbouring-directions
+                                   tag-with-distance]]))
 
 (defn valid-slide? [rings coord direction]
   (let [sliding-into-ring? (rings (direction coord))
@@ -39,7 +40,6 @@
          (if (> count 100) false
            (recur rings new-unexploded new-exploded destination (inc count))))))))
 
-; Should remvoe the ring that is being moved
 (defn valid-destinations [rings source]
   (let [other-rings (disj rings source)
         candidates (->> (frequencies (mapcat neighbours other-rings))
@@ -49,4 +49,10 @@
         availables (difference candidates rings)
         slidables  (filter (partial can-move-to? rings source) availables)]
     (set slidables)))
+
+(defn can-be-moved? [{:keys [rings red blue]} coord]
+  (let [num-neighbours (count (intersection (neighbours coord) rings))]
+    (and (rings coord)
+         (not (or (red coord) (blue coord)))
+         (< num-neighbours 5))))
 
