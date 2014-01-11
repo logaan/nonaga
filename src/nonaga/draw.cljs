@@ -1,5 +1,5 @@
 (ns nonaga.draw
-  (:use [nonaga.react :only [circle svg create-class render-component]])
+  (:use [nonaga.react :only [circle div p svg create-class render-component]])
   (:require [nonaga.core :as n]
             [nonaga.rules.ball :as b]
             [nonaga.rules.rings :as r])
@@ -135,26 +135,47 @@
                (ring "lightgrey" (move-ring component color source hex) svg))
              destinations (map hex->svg destinations))))))
 
+(def color-name
+  {:red "Red"
+   :blue "Blue"})
+
+(defmulti instructions first)
+
+(defmethod instructions :turn-began [[type color]]
+  (str (color-name color) " selects a marble to move."))
+
+(defmethod instructions :marble-selected [[type color source]]
+  (str (color-name color) " selects where to move the marble."))
+
+(defmethod instructions :marble-moved [[type color]]
+  (str (color-name color) " selects a ring to move."))
+
+(defmethod instructions :ring-selected [[type color source]]
+  (str (color-name color) " selects where to move the ring."))
+
 (def board
   (create-class
     "getInitialState"
     (fn []
       (this-as this
-        (let [initial-state (-> n/initial-game
-                                (assoc :event [:turn-began :red]))]
-          #js {:wrapper initial-state})))
+               (let [initial-state (-> n/initial-game
+                                       (assoc :event [:turn-began :red]))]
+                 #js {:wrapper initial-state})))
     "render"
     (fn []
       (this-as this
-         (let [state (.-wrapper (.-state this)) ]
-           (svg {:width 480 :height 480}
-                (draw-rings this state)
-                (draw-potential-rings this state)
-                (if-let [last-ring (:last-ring state)]
-                  (ring "#444" (hex->svg last-ring)))      
-                (draw-marbles this state :red)
-                (draw-marbles this state :blue)
-                (draw-valid-marble-moves this state)))))))
+               (let [state (.-wrapper (.-state this)) ]
+                 (div {}
+                      (p {:id "instructions"}
+                         (instructions (:event state)))      
+                      (svg {:width 480 :height 480}
+                           (draw-rings this state)
+                           (draw-potential-rings this state)
+                           (if-let [last-ring (:last-ring state)]
+                             (ring "#444" (hex->svg last-ring)))      
+                           (draw-marbles this state :red)
+                           (draw-marbles this state :blue)
+                           (draw-valid-marble-moves this state))))))))
 
 (defn start []
   (render-component (board) (sel1 :#content)))

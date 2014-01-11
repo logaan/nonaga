@@ -1,5 +1,11 @@
 (ns nonaga.react)
 
+(defn div [props & children]
+  (js/React.DOM.div (clj->js props) (clj->js children)))
+
+(defn p [props & children]
+  (js/React.DOM.p (clj->js props) (clj->js children)))
+
 (defn svg [props & children]
   (js/React.DOM.svg (clj->js props) (clj->js children)))
 
