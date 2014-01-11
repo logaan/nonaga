@@ -99,10 +99,6 @@
     (map (fn [hex svg] (marble color (if (= cp color) (click color hex)) svg))
          coords (map hex->svg coords))))
 
-(defn print-state []
-  (js/console.log (str (.-wrapper (.-state js/board))))
-  false)
-
 ; This is the same as start-marble-move
 (defn ring-selected [component color coord]
   (update-state component #(assoc % :event [:ring-selected color coord])))
@@ -120,29 +116,36 @@
              (ring "grey" click svg)))
          coords (map hex->svg coords))))
 
+; Same as move-marble
+(defn move-ring [component color from to]
+  (update-state component
+                #(-> % (n/move-ring from to)
+                     (assoc :event [:turn-began (opposite color)]))))
+
 ; These things should be a multi method that dispatches on state. Or I could
 ; have state records with a draw protocol.
 (defn draw-potential-rings [component state]
   (let [[type & event-data] (:event state)
         coords (:rings state)]
     (if (= :ring-selected type)
-      (let [[color coord] event-data]
-        (map (comp (partial ring "lightgrey") hex->svg)
-             (r/valid-destinations coords coord))))))
+      (let [[color source] event-data
+            destinations (r/valid-destinations coords source)]
+        (map (fn [hex svg]
+               (ring "lightgrey" (move-ring component color source hex) svg))
+             destinations (map hex->svg destinations))))))
 
 (def board
   (create-class
     "getInitialState"
     (fn []
       (this-as this
-               (aset js/window "board" this)
                (let [initial-state (assoc n/initial-game :event [:turn-began :red])]
                  #js {:wrapper initial-state})))
     "render"
     (fn []
       (this-as this
          (let [state (.-wrapper (.-state this)) ]
-           (svg {:width 400 :height 400}
+           (svg {:width "100%" :height 400}
                 (draw-rings this state)
                 (draw-potential-rings this state)
                 (draw-marbles this state :red)
