@@ -156,6 +156,15 @@
 (defmethod instructions :ring-selected [[type color source]]
   (str (color-name color) " selects where to move the ring."))
 
+(defn game-resolve [state]
+  (let [winner (b/find-winner state)] 
+	(if (nil? winner)
+      (str "")
+	  (str (color-name winner) " wins")
+	)
+  ))
+
+
 (def board
   (create-class
     "getInitialState"
@@ -171,6 +180,8 @@
                  (div {}
                       (p {:id "instructions"}
                          (instructions (:event state)))      
+					  (p {:id "game_resolve"}
+                         (game-resolve state))
                       (svg {:width 480 :height 480}
                            (draw-rings this state)
                            (draw-potential-rings this state)
