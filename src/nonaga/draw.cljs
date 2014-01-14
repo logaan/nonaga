@@ -21,6 +21,15 @@
   ))
 
 
+(defn game-resolve [state]
+  (let [winner (b/find-winner state)] 
+	(if (nil? winner)
+      (str "")
+	  (str (color-name winner) " wins")
+	)
+  ))
+
+
 (def board
   (create-class
     "getInitialState"
