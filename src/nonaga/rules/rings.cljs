@@ -1,7 +1,7 @@
 (ns nonaga.rules.rings
   (:require [clojure.set :refer [difference intersection]])
   (:use [nonaga.rules.coord :only [neighbours neighbouring-directions
-                                   tag-with-distance]]))
+                                   tag-with-distance side-by-side-directions]]))
 
 (defn valid-slide? [rings coord direction]
   (let [sliding-into-ring? (rings (direction coord))
@@ -50,10 +50,23 @@
         slidables  (filter (partial can-move-to? rings source) availables)]
     (set slidables)))
 
-; To be able to be moved must have At least a gap of two
+(defn has-double-gap? [rings coord]
+  (->
+    (->>
+      ((->> side-by-side-directions
+            (map (partial apply juxt))
+            (apply juxt))
+       coord)
+      (map set)
+      (map (partial intersection rings))
+      (filter empty?)
+      empty?
+      not)))
+
 (defn can-be-moved? [{:keys [rings red blue]} coord]
   (let [num-neighbours (count (intersection (neighbours coord) rings))]
     (and (rings coord)
          (not (or (red coord) (blue coord)))
-         (< num-neighbours 5))))
+         (< num-neighbours 5)
+         (has-double-gap? rings coord))))
 

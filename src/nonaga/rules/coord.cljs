@@ -10,6 +10,9 @@
 (def directions
   [nw ne e se sw w])
 
+(def side-by-side-directions
+  [[nw ne] [ne e] [e se] [se sw] [sw w] [w nw]])
+
 (def neighbouring-directions
   {nw [ne w]  ne [nw e]
    w  [nw sw] e  [ne se]
@@ -28,4 +31,5 @@
 
 (defn tag-with-distance [destination source]
   [(distance source destination) source])
+
 
