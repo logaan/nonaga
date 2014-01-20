@@ -5,5 +5,5 @@
         output (js/document.getElementById "test-output")]
     (.appendChild output new-text)))
 
-(set-print-fn! #(set-pre! %))
+(set-print-fn! set-pre!)
 

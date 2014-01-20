@@ -1,4 +1,4 @@
-(ns nonaga.ball-test
+(ns nonaga.rules.ball-test
   (:require-macros [cemerick.cljs.test :refer (deftest is are)])
   (:use [nonaga.core :only [initial-game]]
         [nonaga.rules.ball :only [invalid-space? move valid-destinations]]

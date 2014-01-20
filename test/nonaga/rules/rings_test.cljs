@@ -1,4 +1,4 @@
-(ns nonaga.rules.ring-test
+(ns nonaga.rules.rings-test
   (:require-macros [cemerick.cljs.test :refer (deftest is are)])
   (:use [nonaga.core :only [initial-game]]
         [nonaga.rules.rings :only [valid-slide? valid-slides can-move-to?
@@ -86,15 +86,14 @@
 
 
 (def one-each-way
-  {:rings
-    #{   [1 4]       [3 4]  
-             [1 3] [2 3] [3 3]
-     [0 2] [1 2] [2 2] [3 2] [4 2] 
-       [0 1] [1 1] [2 1] [3 1] 
-         [1 0] [2 0] [3 0]}})
+  #{   [1 4]       [3 4]  
+           [1 3] [2 3] [3 3]
+   [0 2] [1 2] [2 2] [3 2] [4 2] 
+     [0 1] [1 1] [2 1] [3 1] 
+       [1 0] [2 0] [3 0]})
 
 (deftest has-double-gap?-test
-  (is (has-double-gap?      initial-game [1 4]))
-  (is (not (has-double-gap? initial-game [2 2])))
+  (is (has-double-gap?      one-each-way [1 4]))
+  (is (not (has-double-gap? one-each-way [2 2])))
   (is (not (has-double-gap? one-each-way [1 3]))))
 
