@@ -16,10 +16,10 @@
                                         :optimizations :whitespace
                                         :pretty-print true}}
                        :test {:source-paths ["src" "test"]
-                              :compiler {:output-to "target/cljs/unit-test.js"
+                              :compiler {:output-to "resources/js/test.js"
                                          :optimizations :whitespace
                                          :pretty-print true}}}
               :test-commands {"unit" ["phantomjs" :runner 
                                       "window.literal_js_was_evaluated=true"
-                                      "target/cljs/unit-test.js"]}})
+                                      "resources/js/test.js"]}})
 
