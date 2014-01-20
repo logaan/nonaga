@@ -5,30 +5,6 @@
             [nonaga.rules.rings :as r])
   (:use-macros [dommy.macros :only [sel1]]))
 
-; Events
-;
-; [:turn-began :red]
-; - Clickable red marbles
-; [:marble-selected :red coords]
-; - Clickable red marbles
-; - Clickable pink marbles
-; [:marble-moved :red]
-; - Clickable moveable rings
-; [:ring-selected :ring coords]
-; - Clickable moveable rings
-; - Clickable light grey rings
-;
-; [:turn-began :blue]
-; - Clickable blue marbles
-; [:marble-selected :blue coords]
-; - Clickable blue marbles
-; - Clickable pink marbles
-; [:marble-moved :blue]
-; - Clickable moveable rings
-; [:ring-selected :ring coords]
-; - Clickable moveable rings
-; - Clickable light grey rings
-
 (defn hex->svg [[hex-x hex-y]]
   (let [width  40
         half (/ width 2)
