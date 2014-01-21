@@ -13,14 +13,15 @@
                      (assoc :last-ring to)
                      (assoc :event [:turn-began (opposite color)]))))
 
-; These things should be a multi method that dispatches on state. Or I could
-; have state records with a draw protocol.
-(defn draw-potential-rings [component state]
-  (let [[type & event-data] (:event state)
-        coords (:rings state)]
-    (if (= :ring-selected type)
-      (let [[color source] event-data
-            destinations (r/valid-destinations coords source)]
-        (map (fn [hex svg]
-               (ring "#DDD" (move-ring component color source hex) svg))
-             destinations (map hex->svg destinations))))))
+; Could probably use an event type method
+(defmulti draw-potential-rings (fn [_ state] (first (:event state))))
+
+(defmethod draw-potential-rings :default [_ _])
+
+(defmethod draw-potential-rings :ring-selected
+  [component {[t color source] :event coords :rings}]
+  (let [destinations (r/valid-destinations coords source)]
+    (map (fn [hex svg]
+           (ring "#DDD" (move-ring component color source hex) svg))
+         destinations (map hex->svg destinations))))
+
