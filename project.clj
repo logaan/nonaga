@@ -7,10 +7,13 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "6969"]
                  [prismatic/dommy "0.1.1"]
-                 [com.cemerick/clojurescript.test "0.2.1"]]
+                 [com.cemerick/clojurescript.test "0.2.1"]
+                 [com.cemerick/piggieback "0.1.2"]]
   :plugins [[lein-cljsbuild "1.0.1"]
             [com.cemerick/clojurescript.test "0.2.1"]]
+  :externs ["externs/react.js"]
   :hooks  [leiningen.cljsbuild]
+  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :cljsbuild {:builds {:dev {:source-paths ["src"]
                              :compiler {:output-to "resources/js/main.js"
                                         :optimizations :whitespace
