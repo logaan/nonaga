@@ -8,12 +8,6 @@
         [nonaga.draw.draw-last-ring          :only [draw-last-ring]])
   (:require [nonaga.core :as n]))
 
-; So at the moment each type of thing that is drawn on the board has it's own
-; ns. Some of those draw functions have conditional logic in them for what to
-; render based on the :event. Perhaps there should be created a default ns that
-; has simple renderings for everything. And then a namespace for each phase
-; where it overwrites the appropriate draw functions.
-
 ; To implement win detection it would be quite convenient to have the game
 ; state in an atom. This would allow for a win detection watcher that would
 ; spot that someone has one and would change the :event to end the game.
