@@ -13,12 +13,14 @@
   (let [marbles (color state)]
     (map (partial marble color) (map hex->svg marbles))))
 
-; Color and cp are badly named. Should be color-of-marbles-being-drawn and
-; current player.
 (defmethod draw-marbles ::marble-selectable
-  [component {[t cp] :event :as state} color]
-  (let [coords (color state)
+  [component {[t current-player] :event :as state} marble-color]
+  (let [coords (marble-color state)
         click  (partial start-marble-move component)]
-    (map (fn [hex svg] (marble color (if (= cp color) (click color hex)) svg))
+    (map (fn [hex svg]
+           (marble marble-color
+                   (if (= current-player marble-color)
+                     (click marble-color hex))
+                   svg))
          coords (map hex->svg coords))))
 
