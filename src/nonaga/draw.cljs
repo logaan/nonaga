@@ -1,37 +1,11 @@
 (ns nonaga.draw
   (:use [nonaga.react :only [circle div p svg create-class render-component]]
         [nonaga.draw.instructions :only [instructions]]
-        [nonaga.draw.util :only [hex->svg]])
+        [nonaga.draw.util :only [hex->svg ring marble]])
   (:require [nonaga.core :as n]
             [nonaga.rules.ball :as b]
             [nonaga.rules.rings :as r])
   (:use-macros [dommy.macros :only [sel1]]))
-
-; draw-rings, draw-potential-rings, drawing last ring
-(defn ring
-  ([color coord] (ring color nil coord))
-  ([color click [x y :as coord]]
-   (circle {"cx"          x
-            "cy"          y
-            "r"           14
-            "fill"        "transparent"
-            "stroke"      color
-            "strokeWidth" "7px"
-            "style"       {"cursor" (if click "pointer")}
-            "onClick"     click
-            "key"         (str "ring:" x "," y)})))
-
-; draw-marbles, draw-valid-marble-moves
-(defn marble
-  ([color coord] (marble color nil coord))
-  ([color click [x y :as coord]]
-   (circle {"cx"      x
-            "cy"      y
-            "r"       8
-            "fill"    (name color)
-            "onClick" click
-            "style"   {"cursor" (if click "pointer")}
-            "key"     (str "marble" x "," y)})))
 
 ; move-ring
 (def opposite

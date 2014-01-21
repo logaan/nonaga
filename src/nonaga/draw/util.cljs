@@ -7,3 +7,29 @@
         svg-y (+ 160 (* width hex-y))]
     [svg-x svg-y]))
 
+
+; draw-rings, draw-potential-rings, drawing last ring
+(defn ring
+  ([color coord] (ring color nil coord))
+  ([color click [x y :as coord]]
+   (circle {"cx"          x
+            "cy"          y
+            "r"           14
+            "fill"        "transparent"
+            "stroke"      color
+            "strokeWidth" "7px"
+            "style"       {"cursor" (if click "pointer")}
+            "onClick"     click
+            "key"         (str "ring:" x "," y)})))
+
+; draw-marbles, draw-valid-marble-moves
+(defn marble
+  ([color coord] (marble color nil coord))
+  ([color click [x y :as coord]]
+   (circle {"cx"      x
+            "cy"      y
+            "r"       8
+            "fill"    (name color)
+            "onClick" click
+            "style"   {"cursor" (if click "pointer")}
+            "key"     (str "marble" x "," y)})))
