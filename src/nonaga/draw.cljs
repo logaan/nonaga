@@ -2,28 +2,12 @@
   (:use [nonaga.react :only [circle div p svg create-class render-component]]
         [nonaga.draw.instructions :only [instructions]]
         [nonaga.draw.util :only [hex->svg ring marble update-state]]
-        [nonaga.draw.marble-selected :only [draw-valid-marble-moves]])
+        [nonaga.draw.marble-selected :only [draw-valid-marble-moves]]
+        [nonaga.draw.draw-marbles :only [draw-marbles]])
   (:require [nonaga.core :as n]
             [nonaga.rules.ball :as b]
             [nonaga.rules.rings :as r])
   (:use-macros [dommy.macros :only [sel1]]))
-
-; draw-marbles
-(defn start-marble-move [component color coord]
-  (update-state component #(assoc % :event [:marble-selected color coord])))
-
-; render, own ns?
-(defn draw-marbles [component state color]
-  (let [etype  (get-in state [:event 0])
-        cp     (get-in state [:event 1])
-        coords (color state)
-        click  (partial start-marble-move component)]
-    (map (fn [hex svg]
-           (marble color (if (and (or (= etype :turn-began)
-                                      (= etype :marble-selected))
-                                  (= cp color))
-                           (click color hex)) svg))
-         coords (map hex->svg coords))))
 
 ; This is the same as start-marble-move
 ; draw-rings
