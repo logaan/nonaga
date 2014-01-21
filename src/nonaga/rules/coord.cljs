@@ -32,4 +32,3 @@
 (defn tag-with-distance [destination source]
   [(distance source destination) source])
 
-

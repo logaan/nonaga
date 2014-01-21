@@ -40,3 +40,4 @@
   (fn []
     (let [old-state (.-wrapper (.-state component))]
       (.setState component #js {:wrapper (update-fn old-state)}))))
+
