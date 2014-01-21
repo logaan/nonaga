@@ -1,10 +1,10 @@
 (ns nonaga.draw.draw-valid-marble-moves
   (:require [nonaga.rules.ball :as b]
             [nonaga.core :as n])
-  (:use [nonaga.draw.util :only [hex->svg marble update-state]]))
+  (:use [nonaga.draw.util :only [hex->svg marble update-state event-type]]))
 
 (def light-colors
-  {:red :pink
+  {:red  :pink
    :blue :lightblue})
 
 (defn move-marble [component color from to]
@@ -12,12 +12,15 @@
                 #(-> % (n/move-ball color from to)
                      (assoc :event [:marble-moved color]))))
 
-(defn draw-valid-marble-moves [component state]
-  (let [[type & event-data] (:event state)]
-    (when (= :marble-selected type)
-      (let [[color selected] event-data]
-        (map (fn [hex]
-               (marble (light-colors color)
-                       (move-marble component color selected hex)
-                       (hex->svg hex)))
-              (b/valid-destinations state selected))))))
+(defmulti draw-valid-marble-moves #(event-type %2))
+
+(defmethod draw-valid-marble-moves :default [_ _])
+
+(defmethod draw-valid-marble-moves :marble-selected
+  [component {[t color selected] :event :as state}]
+  (map (fn [hex]
+         (marble (light-colors color)
+                 (move-marble component color selected hex)
+                 (hex->svg hex)))
+       (b/valid-destinations state selected)))
+
