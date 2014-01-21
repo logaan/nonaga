@@ -1,5 +1,6 @@
 (ns nonaga.draw
-  (:use [nonaga.react :only [circle div p svg create-class render-component]])
+  (:use [nonaga.react :only [circle div p svg create-class render-component]]
+        [nonaga.draw.instructions :only [instructions]])
   (:require [nonaga.core :as n]
             [nonaga.rules.ball :as b]
             [nonaga.rules.rings :as r])
@@ -113,24 +114,6 @@
         (map (fn [hex svg]
                (ring "#DDD" (move-ring component color source hex) svg))
              destinations (map hex->svg destinations))))))
-
-(def color-name
-  {:red "Red"
-   :blue "Blue"})
-
-(defmulti instructions first)
-
-(defmethod instructions :turn-began [[type color]]
-  (str (color-name color) " selects a marble to move."))
-
-(defmethod instructions :marble-selected [[type color source]]
-  (str (color-name color) " selects where to move the marble."))
-
-(defmethod instructions :marble-moved [[type color]]
-  (str (color-name color) " selects a ring to move."))
-
-(defmethod instructions :ring-selected [[type color source]]
-  (str (color-name color) " selects where to move the ring."))
 
 (def board
   (create-class
