@@ -1,11 +1,11 @@
 (ns nonaga.draw
   (:use [nonaga.react :only [div p svg create-class render-component]]
-        [nonaga.draw.instructions            :only [instructions]]
-        [nonaga.draw.draw-valid-marble-moves :only [draw-valid-marble-moves]]
-        [nonaga.draw.draw-marbles            :only [draw-marbles]]
-        [nonaga.draw.draw-rings              :only [draw-rings]]
-        [nonaga.draw.draw-potential-rings    :only [draw-potential-rings]]
-        [nonaga.draw.draw-last-ring          :only [draw-last-ring]])
+        [nonaga.draw.instructions       :only [instructions]]
+        [nonaga.draw.valid-marble-moves :only [draw-valid-marble-moves]]
+        [nonaga.draw.marbles            :only [draw-marbles]]
+        [nonaga.draw.rings              :only [draw-rings]]
+        [nonaga.draw.potential-rings    :only [draw-potential-rings]]
+        [nonaga.draw.last-ring          :only [draw-last-ring]])
   (:require [nonaga.core :as n]))
 
 ; To implement win detection it would be quite convenient to have the game

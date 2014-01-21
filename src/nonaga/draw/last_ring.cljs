@@ -1,4 +1,4 @@
-(ns nonaga.draw.draw-last-ring
+(ns nonaga.draw.last-ring
   (:use [nonaga.draw.util :only [hex->svg ring]]))
 
 (defn draw-last-ring [state]

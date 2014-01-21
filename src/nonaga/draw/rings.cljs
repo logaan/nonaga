@@ -1,4 +1,4 @@
-(ns nonaga.draw.draw-rings
+(ns nonaga.draw.rings
   (:require [nonaga.rules.rings :as r])
   (:use [nonaga.draw.util :only [hex->svg ring update-state event-type]]))
 

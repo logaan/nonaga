@@ -1,4 +1,4 @@
-(ns nonaga.draw.draw-marbles
+(ns nonaga.draw.marbles
   (:use [nonaga.draw.util :only [hex->svg marble update-state event-type]]))
 
 (defn start-marble-move [component color coord]
