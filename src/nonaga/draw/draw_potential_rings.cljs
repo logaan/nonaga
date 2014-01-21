@@ -13,7 +13,6 @@
                      (assoc :last-ring to)
                      (assoc :event [:turn-began (opposite color)]))))
 
-; Could probably use an event type method
 (defmulti draw-potential-rings #(event-type %2))
 
 (defmethod draw-potential-rings :default [_ _])
