@@ -1,18 +1,11 @@
 (ns nonaga.draw
   (:use [nonaga.react :only [circle div p svg create-class render-component]]
-        [nonaga.draw.instructions :only [instructions]])
+        [nonaga.draw.instructions :only [instructions]]
+        [nonaga.draw.util :only [hex->svg]])
   (:require [nonaga.core :as n]
             [nonaga.rules.ball :as b]
             [nonaga.rules.rings :as r])
   (:use-macros [dommy.macros :only [sel1]]))
-
-; Used all over the place. Perhaps util?
-(defn hex->svg [[hex-x hex-y]]
-  (let [width  40
-        half (/ width 2)
-        svg-x (+ 160 (* width hex-x) (if (odd? hex-y) half 0))
-        svg-y (+ 160 (* width hex-y))]
-    [svg-x svg-y]))
 
 ; draw-rings, draw-potential-rings, drawing last ring
 (defn ring
