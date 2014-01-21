@@ -3,13 +3,10 @@
             [nonaga.rules.rings :as r])
   (:use [nonaga.draw.util :only [hex->svg ring update-state]]))
 
-; move-ring
 (def opposite
   {:red :blue
    :blue :red})
 
-; Same as move-marble
-; draw-potential-rings
 (defn move-ring [component color from to]
   (update-state component
                 #(-> % (n/move-ring from to)
@@ -18,7 +15,6 @@
 
 ; These things should be a multi method that dispatches on state. Or I could
 ; have state records with a draw protocol.
-; render. own ns.
 (defn draw-potential-rings [component state]
   (let [[type & event-data] (:event state)
         coords (:rings state)]

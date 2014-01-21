@@ -2,12 +2,9 @@
   (:require [nonaga.rules.rings :as r])
   (:use [nonaga.draw.util :only [hex->svg ring update-state]]))
 
-; This is the same as start-marble-move
-; draw-rings
 (defn ring-selected [component color coord]
   (update-state component #(assoc % :event [:ring-selected color coord])))
 
-; render. own ns?
 (defn draw-rings [component state]
   (let [[type & event-data] (:event state)
         coords (:rings state)]

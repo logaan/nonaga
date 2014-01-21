@@ -9,7 +9,6 @@
     [svg-x svg-y]))
 
 
-; draw-rings, draw-potential-rings, drawing last ring
 (defn ring
   ([color coord] (ring color nil coord))
   ([color click [x y :as coord]]
@@ -23,7 +22,6 @@
             "onClick"     click
             "key"         (str "ring:" x "," y)})))
 
-; draw-marbles, draw-valid-marble-moves
 (defn marble
   ([color coord] (marble color nil coord))
   ([color click [x y :as coord]]
@@ -35,8 +33,6 @@
             "style"   {"cursor" (if click "pointer")}
             "key"     (str "marble" x "," y)})))
 
-; Used quite a bit. Perhaps should switch to using atoms then this will all be
-; a bit more natural.
 (defn update-state [component update-fn]
   (fn []
     (let [old-state (.-wrapper (.-state component))]
