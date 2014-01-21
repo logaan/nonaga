@@ -15,3 +15,4 @@
                                   (= cp color))
                            (click color hex)) svg))
          coords (map hex->svg coords))))
+
