@@ -1,4 +1,4 @@
-(ns nonaga.draw.marble-selected
+(ns nonaga.draw.draw-valid-marble-moves
   (:require [nonaga.rules.ball :as b]
             [nonaga.core :as n])
   (:use [nonaga.draw.util :only [hex->svg marble update-state]]))
