@@ -3,29 +3,12 @@
         [nonaga.draw.instructions :only [instructions]]
         [nonaga.draw.util :only [hex->svg ring marble update-state]]
         [nonaga.draw.marble-selected :only [draw-valid-marble-moves]]
-        [nonaga.draw.draw-marbles :only [draw-marbles]])
+        [nonaga.draw.draw-marbles :only [draw-marbles]]
+        [nonaga.draw.draw-rings :only [draw-rings]])
   (:require [nonaga.core :as n]
             [nonaga.rules.ball :as b]
             [nonaga.rules.rings :as r])
   (:use-macros [dommy.macros :only [sel1]]))
-
-; This is the same as start-marble-move
-; draw-rings
-(defn ring-selected [component color coord]
-  (update-state component #(assoc % :event [:ring-selected color coord])))
-
-; render. own ns?
-(defn draw-rings [component state]
-  (let [[type & event-data] (:event state)
-        coords (:rings state)]
-    (map (fn [hex svg]
-           (if (and (or (= :marble-moved type)
-                        (= :ring-selected type))
-                    (r/can-be-moved? state hex))
-             (let [[color] event-data]
-               (ring "#444" (ring-selected component color hex) svg))
-             (ring "#999" svg)))
-         coords (map hex->svg coords))))
 
 ; move-ring
 (def opposite
