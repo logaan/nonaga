@@ -5,14 +5,14 @@
 (defn ring-selected [component color coord]
   (update-state component #(assoc % :event [:ring-selected color coord])))
 
-(derive :marble-moved  ::ring-selectable)
-(derive :ring-selected ::ring-selectable)
-
 (defmulti draw-rings #(event-type %2))
 
 (defmethod draw-rings :default
   [component {:keys [rings]}]
   (map (partial ring "#999") (map hex->svg rings)))
+
+(derive :marble-moved  ::ring-selectable)
+(derive :ring-selected ::ring-selectable)
 
 (defmethod draw-rings ::ring-selectable
   [component {[t color] :event rings :rings :as state}]
