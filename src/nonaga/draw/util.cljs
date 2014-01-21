@@ -1,6 +1,9 @@
 (ns nonaga.draw.util
   (:use [nonaga.react :only [circle]]))
 
+(defn event-type [state]
+  (first (:event state)))
+
 (defn hex->svg [[hex-x hex-y]]
   (let [width  40
         half (/ width 2)

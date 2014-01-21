@@ -1,7 +1,7 @@
 (ns nonaga.draw.draw-potential-rings
   (:require [nonaga.core :as n]
             [nonaga.rules.rings :as r])
-  (:use [nonaga.draw.util :only [hex->svg ring update-state]]))
+  (:use [nonaga.draw.util :only [hex->svg ring update-state event-type]]))
 
 (def opposite
   {:red :blue
@@ -14,7 +14,7 @@
                      (assoc :event [:turn-began (opposite color)]))))
 
 ; Could probably use an event type method
-(defmulti draw-potential-rings (fn [_ state] (first (:event state))))
+(defmulti draw-potential-rings #(event-type %2))
 
 (defmethod draw-potential-rings :default [_ _])
 
