@@ -2,6 +2,8 @@
 
 A Clojure implementation of the game Spanish table top game [Nonaga] [bgg].
 
+A playable copy is available at [http://logaan.net/nonaga].
+
 ## License
 
 Copyright © 2013 Logan Campbell
