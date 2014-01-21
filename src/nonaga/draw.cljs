@@ -6,6 +6,7 @@
             [nonaga.rules.rings :as r])
   (:use-macros [dommy.macros :only [sel1]]))
 
+; Used all over the place. Perhaps util?
 (defn hex->svg [[hex-x hex-y]]
   (let [width  40
         half (/ width 2)
@@ -13,6 +14,7 @@
         svg-y (+ 160 (* width hex-y))]
     [svg-x svg-y]))
 
+; draw-rings, draw-potential-rings, drawing last ring
 (defn ring
   ([color coord] (ring color nil coord))
   ([color click [x y :as coord]]
@@ -26,6 +28,7 @@
             "onClick"     click
             "key"         (str "ring:" x "," y)})))
 
+; draw-marbles, draw-valid-marble-moves
 (defn marble
   ([color coord] (marble color nil coord))
   ([color click [x y :as coord]]
@@ -37,24 +40,30 @@
             "style"   {"cursor" (if click "pointer")}
             "key"     (str "marble" x "," y)})))
 
+; move-ring
 (def opposite
   {:red :blue
    :blue :red})
 
+; draw-valid-marble-moves
 (def light-colors
   {:red :pink
    :blue :lightblue})
 
+; Used quite a bit. Perhaps should switch to using atoms then this will all be
+; a bit more natural.
 (defn update-state [component update-fn]
   (fn []
     (let [old-state (.-wrapper (.-state component))]
       (.setState component #js {:wrapper (update-fn old-state)}))))
 
+; draw-valid-marble-moves
 (defn move-marble [component color from to]
   (update-state component
                 #(-> % (n/move-ball color from to)
                      (assoc :event [:marble-moved color]))))
 
+; render, own namespace?
 (defn draw-valid-marble-moves [component state]
   (let [[type & event-data] (:event state)]
     (when (= :marble-selected type)
@@ -65,9 +74,11 @@
                        (hex->svg hex)))
               (b/valid-destinations state selected))))))
 
+; draw-marbles
 (defn start-marble-move [component color coord]
   (update-state component #(assoc % :event [:marble-selected color coord])))
 
+; render, own ns?
 (defn draw-marbles [component state color]
   (let [etype  (get-in state [:event 0])
         cp     (get-in state [:event 1])
@@ -81,9 +92,11 @@
          coords (map hex->svg coords))))
 
 ; This is the same as start-marble-move
+; draw-rings
 (defn ring-selected [component color coord]
   (update-state component #(assoc % :event [:ring-selected color coord])))
 
+; render. own ns?
 (defn draw-rings [component state]
   (let [[type & event-data] (:event state)
         coords (:rings state)]
@@ -97,6 +110,7 @@
          coords (map hex->svg coords))))
 
 ; Same as move-marble
+; draw-potential-rings
 (defn move-ring [component color from to]
   (update-state component
                 #(-> % (n/move-ring from to)
@@ -105,6 +119,7 @@
 
 ; These things should be a multi method that dispatches on state. Or I could
 ; have state records with a draw protocol.
+; render. own ns.
 (defn draw-potential-rings [component state]
   (let [[type & event-data] (:event state)
         coords (:rings state)]
