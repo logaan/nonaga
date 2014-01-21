@@ -1,45 +1,12 @@
 (ns nonaga.draw
   (:use [nonaga.react :only [circle div p svg create-class render-component]]
         [nonaga.draw.instructions :only [instructions]]
-        [nonaga.draw.util :only [hex->svg ring marble]])
+        [nonaga.draw.util :only [hex->svg ring marble update-state]]
+        [nonaga.draw.marble-selected :only [draw-valid-marble-moves]])
   (:require [nonaga.core :as n]
             [nonaga.rules.ball :as b]
             [nonaga.rules.rings :as r])
   (:use-macros [dommy.macros :only [sel1]]))
-
-; move-ring
-(def opposite
-  {:red :blue
-   :blue :red})
-
-; draw-valid-marble-moves
-(def light-colors
-  {:red :pink
-   :blue :lightblue})
-
-; Used quite a bit. Perhaps should switch to using atoms then this will all be
-; a bit more natural.
-(defn update-state [component update-fn]
-  (fn []
-    (let [old-state (.-wrapper (.-state component))]
-      (.setState component #js {:wrapper (update-fn old-state)}))))
-
-; draw-valid-marble-moves
-(defn move-marble [component color from to]
-  (update-state component
-                #(-> % (n/move-ball color from to)
-                     (assoc :event [:marble-moved color]))))
-
-; render, own namespace?
-(defn draw-valid-marble-moves [component state]
-  (let [[type & event-data] (:event state)]
-    (when (= :marble-selected type)
-      (let [[color selected] event-data]
-        (map (fn [hex]
-               (marble (light-colors color)
-                       (move-marble component color selected hex)
-                       (hex->svg hex)))
-              (b/valid-destinations state selected))))))
 
 ; draw-marbles
 (defn start-marble-move [component color coord]
@@ -75,6 +42,11 @@
                (ring "#444" (ring-selected component color hex) svg))
              (ring "#999" svg)))
          coords (map hex->svg coords))))
+
+; move-ring
+(def opposite
+  {:red :blue
+   :blue :red})
 
 ; Same as move-marble
 ; draw-potential-rings

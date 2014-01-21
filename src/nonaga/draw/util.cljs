@@ -1,4 +1,5 @@
-(ns nonaga.draw.util)
+(ns nonaga.draw.util
+  (:use [nonaga.react :only [circle]]))
 
 (defn hex->svg [[hex-x hex-y]]
   (let [width  40
@@ -33,3 +34,10 @@
             "onClick" click
             "style"   {"cursor" (if click "pointer")}
             "key"     (str "marble" x "," y)})))
+
+; Used quite a bit. Perhaps should switch to using atoms then this will all be
+; a bit more natural.
+(defn update-state [component update-fn]
+  (fn []
+    (let [old-state (.-wrapper (.-state component))]
+      (.setState component #js {:wrapper (update-fn old-state)}))))
