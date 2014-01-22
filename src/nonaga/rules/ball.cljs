@@ -13,36 +13,21 @@
       step)))
 
 (defn find-winner [{:keys [rings red blue]}]
-	(let 
-		[
-			allconnected
-			(fn [marble-color] 
-				(> 
-					(count 
-						(reduce clojure.set/union
-							(for [coord marble-color coord' marble-color] 
-								(clojure.set/intersection 
-									#{coord}
-									(neighbours coord')
-								)
-							)
-						)
-					)
-					2
-				)
-			)
-		]
-		(
-			if (allconnected red)
-			:red 
-			(
-				if (allconnected blue)
-				:blue 
-				nil
-			)
-		)
-	)
-)
+  (let [all-connected
+	(fn [marble-color] 
+	  (> 
+	    (count 
+		  (reduce clojure.set/union
+		    (for [coord marble-color coord' marble-color] 
+			  (clojure.set/intersection 
+			    #{coord}
+				(neighbours coord')))))
+        2))]
+      (if (all-connected red)
+	    :red 
+		  (if (all-connected blue)
+		    :blue 
+			nil))))
 	  
 (defn valid-destinations [board coord]
   (disj (into #{} (map (partial move board coord) directions)) coord))
