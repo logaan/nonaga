@@ -18,3 +18,5 @@
 (defmethod instructions :ring-selected [[type color source]]
   (str (color-name color) " selects where to move the ring."))
 
+(defmethod instructions :game-won [[type color]]
+  (str (color-name color) " wins."))
