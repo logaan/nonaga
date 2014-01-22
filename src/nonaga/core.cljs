@@ -20,7 +20,7 @@
        
      [0 2]
        
-                     [3 0]}})                   
+                     [3 0]}})
 
 (defn move-ball [game color from to]
   (update-in game [color] #(-> % (disj from) (conj to))))
