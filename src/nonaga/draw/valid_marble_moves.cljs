@@ -9,8 +9,11 @@
 
 (defn move-marble [component color from to]
   (update-state component
-                #(-> % (n/move-ball color from to)
-                     (assoc :event [:marble-moved color]))))
+    (fn [s] (let [s' (n/move-ball s color from to) 
+                  winner (b/find-winner s)]
+      (if (nil? winner)
+        (assoc s' :event [:marble-moved color])
+        (assoc s' :event [:game-won winner]))))))
 
 (defmulti draw-valid-marble-moves #(event-type %2))
 
