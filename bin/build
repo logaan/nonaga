@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-set -euxo pipefail
-
-lein cljsbuild test
-lein cljsbuild once
