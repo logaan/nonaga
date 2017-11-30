@@ -15,7 +15,7 @@ A playable copy is available at http://logaan.net/nonaga.
 2. Go into the "Settings" for the app and set the following buildpacks in order:
   1. https://github.com/heroku/heroku-buildpack-clojure
   2. https://github.com/heroku/heroku-buildpack-static
-3. Create a Config Variable `LEIN_BUILD_TASK` as `do cljsbuild once, cljsbuild test`
+3. Create a Config Variable `LEIN_BUILD_TASK` as `cljsbuild once`
 
 ## License
 
