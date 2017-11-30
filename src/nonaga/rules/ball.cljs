@@ -1,4 +1,5 @@
 (ns nonaga.rules.ball
+  (:require [clojure.set])
   (:use [nonaga.rules.coord :only [directions neighbours]]))
 
 (defn invalid-space? [{:keys [rings red blue]} coord]
